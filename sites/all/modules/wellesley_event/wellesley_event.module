@@ -1,0 +1,407 @@
+<?php
+function wellesley_event_node_update($node){
+  if ($node->type == 'event') {
+	
+	if (file_exists("/var/secure/event/r25")) {
+
+  		// Get all r25 information from the data file.
+
+  		$infoDB = array();
+  		$infoDB = file("/var/secure/event/r25");
+  		//$temp = file_get_contents("/var/secure/event/r25"); 
+  		//echo $temp;
+
+  		for ($i = 0; $i <sizeof($infoDB); $i++) {
+    			$infoDB[$i] = trim($infoDB[$i]);
+    			//print trim($infoDB[$i])."<br>";
+  		}
+
+  		define ("R25_USER", $infoDB[0]);
+  		define ("R25_PWD", $infoDB[1]);
+ 		define ("R25_WS_URL_BASE", $infoDB[2]);
+ 		define ("R25_WS_URL_BASE_CURL",$infoDB[3]);
+		
+		define ("MYSQL_SRV",$infoDB[4]);
+		define ("MYSQL_USER",$infoDB[5]);
+		define ("MYSQL_PWD",$infoDB[6]);
+		define ("MYSQL_NAME",$infoDB[7]);
+   	}
+
+  	$mysql_link_drupal = new mysqli (MYSQL_SRV, MYSQL_USER, MYSQL_PWD, MYSQL_NAME);
+
+	if (!$mysql_link_drupal)
+      		die ("We're sorry, database connection failed. ");
+	$mysql_link_drupal->set_charset("utf8");
+				
+	$r_id = $node->field_reservationid[$node->language][0]['value'];
+	//watchdog("Wellesley Event",'r_id @test', array('@test'=>$r_id));
+	$event_id = $node->field_eventid[$node->language][0]['value'];
+
+	$r_title=$node->field_eventtitle[$node->language][0]['value'];
+	$r_name=$node->field_eventname[$node->language][0]['value']; 
+	$r_details=$node->field_eventdetails[$node->language][0]['value']; 
+	print "From event module drupal event details: ".$r_details."\n";
+	$r_category = array();
+	//echo "e_category ID: ".$node->field_eventcategory[$node1->language][0]['tid']."<br>";
+	foreach($node->field_eventcategory[$node->language] as $category) {
+    	$e_cat =$category['tid'];
+        $r_category[] = $e_cat;     			
+    } 
+
+	$e_category = array();
+	//echo "e_category ID: ".$node1->field_eventcategory[$node1->language][0]['tid']."<br>";
+	foreach($node->field_eventcategory[$node->language] as $category) {
+    		$e_cat =$category['tid'];
+    		//echo "e_category ID: ".$e_cat."<br>";
+     		$term = taxonomy_term_load($e_cat);
+        	if(is_object($term)) {
+          		//print_r($term);
+          		$e_cat = $term->name; 
+          		//echo "e_category: ".$e_cat."<br>";
+          		$e_category[] = $e_cat;
+        	}      			
+    	} 
+	if(isset($event_id) && $event_id > 0){
+	//Find all the reservations that for one event
+		$rows = db_query('SELECT * FROM {field_data_field_eventid} WHERE field_eventid_value = :eid', array(':eid' => $event_id));
+		foreach($rows as $row){
+		  $nid = $row->entity_id;		  		  
+		  $node1 = node_load($nid);
+		  $reservation_id = $node1->field_reservationid[$node1->language][0]['value'];
+		  watchdog("Wellesley Event",'reservation_id @test', array('@test'=>$reservation_id));
+		  watchdog("Wellesley Event",'r_id @test', array('@test'=>$r_id));
+		  if($reservation_id !== $r_id){
+		    watchdog("Wellesley Event",'reservation_id @test', array('@test'=>$reservation_id));
+			$reservation_title=$node1->field_eventtitle[$node->language][0]['value'];
+			$reservation_name=$node1->field_eventname[$node1->language][0]['value']; 
+			$reservation_details=$node1->field_eventdetails[$node1->language][0]['value']; 
+			$reservation_category = array();
+			//echo "e_category ID: ".$node1->field_eventcategory[$node1->language][0]['tid']."<br>";
+			foreach($node1->field_eventcategory[$node1->language] as $category) {
+    				$e_cat =$category['tid'];    				
+          			$reservation_category[] = $e_cat;     			
+    		} 
+    		
+			//compare values
+			if($reservation_title!=$r_title){
+				//watchdog("Wellesley Event",'reservation_title @test and r_title @test1 and nid @nid', array('@test'=>$reservation_title,'@test1'=>$r_title,'@nid'=>$nid));
+            	$sql = "update field_data_field_eventtitle set field_eventtitle_value = ? where entity_id = ?";
+				$stmt1 = $mysql_link_drupal->prepare($sql) or die ("Error preparing statement eventtitle");
+				$stmt1->bind_param('si', $r_title,$nid);
+				/* execute prepared statement */ 
+				$stmt1->execute() or die ("Error executing statement eventtitle"); 
+				$sql = "update field_revision_field_eventtitle set field_eventtitle_value = ? where entity_id = ?";
+				$stmt1 = $mysql_link_drupal->prepare($sql) or die ("Error preparing statement r eventtitle");
+				$stmt1->bind_param('si', $r_title,$nid);
+				/* execute prepared statement */ 
+				$stmt1->execute() or die ("Error executing statement r eventtitle"); 
+				$stmt1->close();
+			}
+			if($reservation_name!=$r_name){
+				//watchdog("Wellesley Event",'reservation_name @test and r_name @test1 and nid @nid', array('@test'=>$reservation_name,'@test1'=>$r_name,'@nid'=>$nid));				
+				$sql = "update field_data_field_eventname set field_eventname_value = ? where entity_id = ?";
+				$stmt1 = $mysql_link_drupal->prepare($sql) or die ("Error preparing statement eventname");
+				$stmt1->bind_param('si', $r_name,$nid);
+				/* execute prepared statement */ 
+				$stmt1->execute() or die ("Error executing statement eventname"); 
+				$sql = "update field_revision_field_eventname set field_eventname_value = ? where entity_id = ?";
+				$stmt1 = $mysql_link_drupal->prepare($sql) or die ("Error preparing statement r eventname");
+				$stmt1->bind_param('si', $r_name,$nid);
+				/* execute prepared statement */ 
+				$stmt1->execute() or die ("Error executing statement r eventname"); 
+				$stmt1->close();
+				
+			}
+
+			if($reservation_details!=$r_details){
+				//$node1->field_eventdetails[$node->language][0]['value'] = $r_details;
+				//$node1->field_eventdetails[$node->language][0]['format'] = 'full_html'; 
+				watchdog("Wellesley Event",'reservation_details @test and nid @nid', array('@test'=>$reservation_details,'@nid'=>$nid));
+				watchdog("Wellesley Event",'r_details @test and nid @nid', array('@test'=>$r_details,'@nid'=>$nid));				
+				$sql = "update field_data_field_eventdetails set field_eventdetails_value = ? where entity_id = ?";
+				$stmt1 = $mysql_link_drupal->prepare($sql) or die ("Error preparing statement eventdetails");
+				$stmt1->bind_param('si', $r_details,$nid);
+				/* execute prepared statement */ 
+				$stmt1->execute() or die ("Error executing statement eventdetails"); 
+				$sql = "update field_revision_field_eventdetails set field_eventdetails_value = ? where entity_id = ?";
+				$stmt1 = $mysql_link_drupal->prepare($sql) or die ("Error preparing statement r eventdetails");
+				$stmt1->bind_param('si', $r_details,$nid);
+				/* execute prepared statement */ 
+				$stmt1->execute() or die ("Error executing statement r eventdetails"); 
+				$stmt1->close();
+			}
+
+			$diffArray1 = array_diff($r_category,$reservation_category);
+			$diffArray2 = array_diff($reservation_category,$r_category);
+			if(count($diffArray1)>0||count($diffArray2)>0){
+			//Get exiting values
+				$sql = "select vid from node where nid = ?";
+
+				$stmt1 = $mysql_link_drupal->prepare($sql) or die ("Error preparing statement eventcategory 1");
+				$stmt1->bind_param('i', $nid);
+				$stmt1->execute() or die ("Error executing statement eventcategory 1");
+    			$stmt1->bind_result($rev_id);
+
+				$version_id = 0;
+				while ($stmt1->fetch()) {
+					$version_id = $rev_id;
+				}
+				//echo "revision id: ".$version_id."<br>";
+				//echo "nid: ".$nid."<br>";
+			//First remove all events category
+				$sql = "delete from field_data_field_eventcategory where entity_id = ?";
+				$stmt1 = $mysql_link_drupal->prepare($sql) or die ("Error preparing statement eventcategory 2");
+				$stmt1->bind_param('i', $nid);
+				$stmt1->execute() or die ("Error executing statement eventcategory 2");
+				$sql = "delete from field_revision_field_eventcategory where entity_id = ?";
+				$stmt1 = $mysql_link_drupal->prepare($sql) or die ("Error preparing statement r eventcategory 1");
+				$stmt1->bind_param('i', $nid);
+				$stmt1->execute() or die ("Error executing statement r eventcategory 1"); 
+			//Add new category
+
+				if(count($r_category)>0){
+					$count = 0;
+					$entity_type = 'node'; 
+					$bundle = 'event';
+					$language = 'und';
+					foreach ($r_category as $elem) {
+						$cid = trim($elem);
+						//echo "event categorg id: ".$cid."<br>";
+						//echo "revision id: ".$version_id."<br>";
+						$temp = $version_id;
+						$sql = "insert into field_data_field_eventcategory(entity_type,bundle,entity_id,revision_id,language,delta,field_eventcategory_tid) values(?,?,?,?,?,?,?)";
+						$stmt1 = $mysql_link_drupal->prepare($sql) or die ("Error preparing statement eventcategory 3");			
+						$stmt1->bind_param('ssiisii', $entity_type,$bundle,$nid,$temp,$language,$count,$cid);
+
+						$stmt1->execute() or die ("Error executing statement eventcategory 3");
+
+						//echo $entity_type.":".$bundle.":".$nid.":".$temp.":".$language.":".$count.":".$cid;
+						$sql = "insert into field_revision_field_eventcategory(entity_type,bundle,entity_id,revision_id,language,delta,field_eventcategory_tid) values(?,?,?,?,?,?,?)";
+						$stmt1 = $mysql_link_drupal->prepare($sql) or die ("Error preparing statement r eventcategory 2");
+						$stmt1->bind_param('ssiisii', $entity_type,$bundle,$nid,$temp,$language,$count,$cid);
+						$stmt1->execute() or die ("Error executing statement r eventcategory 2");
+						
+						$stmt1->close();
+						sleep(10);
+						
+						$count++;										
+					}						
+				}
+			}
+		  }
+		}
+		//write data to R25
+		//echo "R25 node id: ".$node_id."<br><br>";
+						$event_xml =  getEventXML($event_id);
+						$changed = false;
+						$diffArray1 = array();
+						$diffArray2 = array();
+						foreach ($event_xml->children("http://www.collegenet.com/r25") as $child) {
+							$event_name = $child->event_name;
+							//echo "R25 event name: ".$event_name."<br>";
+							$event_title = $child->event_title;
+							//echo "R25 event title: ".$event_title."<br>";
+							$event_details = "";
+							foreach ($child->event_text as $secondChild){
+								$text_id = (String)$secondChild->text_type_id;
+								if($text_id=="1"){	
+									$event_details = trim($secondChild->text);
+								}		
+							}
+							print "From event module R25 event details: ".$event_details."\n";
+							$event_category = array();
+
+		  					foreach ($child->category as $secondChild){		  	
+								$category_id = (String)$secondChild->category_id;
+								$category_name = (String)$secondChild->category_name;	
+								$event_category[] =$category_name."(id:".$category_id.")";
+								//echo "event_category: ".$category_name."(id:".$category_id.")<br>";
+							}
+
+							if(trim($event_name) == trim($r_name)){
+							}else{
+								$changed = true;
+								//echo "event name is different!<br>";
+							}
+							if(trim($event_title) ==trim( $r_title)){
+							}else{
+								$changed = true;
+								//echo "event title is different!<br>";
+							}
+							if(trim($event_details) == trim($r_details)){
+							}else{
+								$changed = true;
+								//echo "event details is different!<br>";
+							}
+							$diffArray1 = array_diff($e_category, $event_category);//what drupal have that are not in R25
+							$diffArray2 = array_diff($event_category,$e_category);//what R25 have that are not in drupal
+							if(count($diffArray1)>0||count($diffArray2)>0){
+								//echo "what drupal have that are not in R25:<br>";
+								print_r($diffArray1);
+								//echo "<br>what R25 have that are not in Drupal:<br>";
+								print_r($diffArray2);
+								$changed = true;
+							}							
+						}
+						if($changed==true){
+							//update data in R25
+								 $result = false;
+								 //$result = updateEvent($event_id,$event_xml,$r_title,$r_name,$r_details,$diffArray1,$diffArray2);
+								 if($result){
+									print "update successful!\n";
+								}else{
+									print "update failed!\n";
+								}
+						}else{
+								print "no update needed!\n";
+						}
+	}	 
+ }
+}
+
+function getEventXML($event_id){
+	$r25 =R25_USER.":".R25_PWD;
+
+	//echo $r25;
+	$credentials = stream_context_create(array(
+								 'http' => array(
+										 'header'  => "Authorization: Basic " . base64_encode("$r25")
+										 )
+								 ));
+	//echo R25_USER.":".R25_PWD.";";
+
+	$filename="";
+
+	$filename = R25_WS_URL_BASE."event.xml?event_id=".$event_id."&mode=edit";
+
+	print "Event: $filename\n";
+
+	$xml_string = file_get_contents($filename, false,$credentials);
+	//echo $xml_string;
+	$xml = simplexml_load_string($xml_string);
+
+	return $xml;
+}
+
+//update single event data
+function updateEvent($event_id,$xml,$title,$name,$desc,$diffArray1,$diffArray2){
+	//$xml = getXML("single",$event_id);
+	//$xml = getEventXML($event_id);
+	//print $xml->asXML();
+//echo "<br>".$event_id.":".$title.":".$name.":".$desc."<br>";
+	//echo $xml->getName() . "<br>";
+	//$error=false;
+	//$event_data_array= array();
+	
+	foreach ($xml->children("http://www.collegenet.com/r25") as $childevent) {
+
+		$childevent->attributes()->status="mod";   // returns an array
+         // get the value of this attribute
+   		print ($childevent->attributes()->status); 
+		$childevent->event_name=$name;
+		$childevent->event_title=$title;
+		foreach ($childevent->event_text as $secondChildEvent){		    
+			$text_id = (String)$secondChildEvent->text_type_id;
+			print "text id:".$text_id."<br>";
+			if($text_id=="1"){
+				$secondChildEvent->attributes()->status="mod";
+				$secondChildEvent->text=$desc;
+			}		
+		}
+		//need to label as delete first
+		if(count($diffArray2)>0){//category need to be deleted from R25
+
+			$cArray = array();
+			foreach($diffArray2 as $value){
+					$cid = getEventCategoryId($value);
+					//echo "cid:".$cid."<br>";
+					$cArray[] = $cid;
+					
+			}
+			foreach ($childevent->category as $secondChildEvent){		    
+				$category_id = trim((String)$secondChildEvent->category_id);
+				//echo "category_id:".$category_id."<br>";
+				
+				if(in_array($category_id,$cArray)){
+					$secondChildEvent->attributes()->status="del";
+				}		
+			}		
+		}
+		if(count($diffArray1)>0){//category need to be added to R25
+			foreach($diffArray1 as $value){
+				$cid = getEventCategoryId($value);
+				$cname = getEventCategoryName($cid);
+				$secondChildEvent = $childevent->addChild("category");
+				//$secondChild->addAttribute("xl:href", 'evcat.xml?category_id='.$cid);
+				$secondChildEvent->addAttribute('status', 'new');
+				$secondChildEvent->addChild('category_id', $cid);
+				$secondChildEvent->addChild('category_name',$cname);
+			}
+		}
+	}
+	//print $xml->asXML();
+	$result = putXML($xml, $event_id);
+//print $result;	
+	return $result;
+}
+
+function putXML($xml,$event_id){
+    $result=true;
+	$xmlString = $xml->asXML();
+    $url=R25_WS_URL_BASE_CURL."event.xml?event_id=".$event_id."&mode=edit";
+//echo $url."<br>";
+	$returnData=http_put_data($url,$xmlString,array(
+                    headers => array(
+                           'Content-Type'  => 'text/xml'
+                          ,'charset'     => 'utf-8'
+                        )
+                  ));
+
+				  //$returnData=http_put_data($url,$xmlString);
+//echo $returnData;
+	//if error $returnData value is false
+	if(strpos($returnData,"<r25:msg_id>BADREQUEST</r25:msg_id>")){
+		$result=false;
+	}
+	
+	return $result;
+	
+}
+function getEventCategoryName($cid){
+	$r25 =R25_USER.":".R25_PWD;
+
+	//echo $r25;
+	$credentials = stream_context_create(array(
+								 'http' => array(
+										 'header'  => "Authorization: Basic " . base64_encode("$r25")
+										 )
+								 ));
+	$eCategoryName = "";
+	$filename=R25_WS_URL_BASE."evcat.xml?category_id=".$cid;
+	
+	$xml_string = file_get_contents($filename, false,$credentials);
+	//echo $xml_string;
+	$xml = simplexml_load_string($xml_string);
+
+	foreach ($xml->children("http://www.collegenet.com/r25") as $child) {
+				$eCategoryName =trim($child->category_name)."(id:".$cid.")";;
+				//echo "category".$eCategoryName."<br>";
+	}
+	return trim($eCategoryName);
+}
+
+function getEventCategoryId($value){
+	$cid = "";
+	$pos = strripos($value,"(id:");
+  	if($pos == FALSE||$pos==0){
+  			//echo "not found the string!<br>";
+  	}else{
+  			//echo $pos."<br>";
+  			$slength = strlen($value);
+  			$temp = $slength-$pos-5;
+  			//echo $temp."<br>";
+  			$cid = substr($value,$pos+4,$temp);
+  	}		
+  			
+	return trim($cid);
+}

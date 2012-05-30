@@ -1,0 +1,20 @@
+diff --git a/sources/imce.inc b/sources/imce.inc
+index 3cb5b6a..80c7f8d 100644
+--- a/sources/imce.inc
++++ b/sources/imce.inc
+@@ -126,13 +126,14 @@ function filefield_source_imce_process($element, &$form_state, $form) {
+  * A #filefield_value_callback function.
+  */
+ function filefield_source_imce_value($element, &$item) {
++  global $base_path;
+   if (isset($item['filefield_imce']['file_path']) && $item['filefield_imce']['file_path'] != '') {
+     $field = field_info_field($element['#field_name']);
+ 
+     $scheme = $field['settings']['uri_scheme'];
+     $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
+     $file_directory_prefix = $wrapper->getDirectoryPath();
+-    $uri = preg_replace('/^' . preg_quote('/' . $file_directory_prefix . '/', '/') . '/', $scheme . '://', $item['filefield_imce']['file_path']);
++    $uri = preg_replace('/^' . preg_quote($base_path . $file_directory_prefix . '/', '/') . '/', $scheme . '://', $item['filefield_imce']['file_path']);
+ 
+     // Resolve the file path to an FID.
+     $fid = db_select('file_managed', 'f')

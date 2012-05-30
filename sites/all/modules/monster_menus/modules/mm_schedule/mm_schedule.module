@@ -1,0 +1,1227 @@
+<?php
+
+/**
+ * @file
+ * Schedule/Calendar functions for Monster Menus
+ */
+
+define('MM_SCHEDULE_USER_CALENDAR_DEFAULT_NAME', '.Calendar');
+define('MM_SCHEDULE_USER_CALENDAR_ALIAS', 'mycalendar');
+define('MM_SCHEDULE_INSTRUCTION_SLASH', 'zzzz');
+
+/**
+ * Implements hook_theme().
+ */
+function mm_schedule_theme() {
+  return array(
+    'mm_schedule_date_combo_all_day' => array(
+        'file' => 'mm_schedule_theme.inc',
+        'variables' => array('element' => NULL)),
+    'calendar_year__mm_calendar' => array(
+        'file' => 'mm_schedule_theme.inc',
+        'variables' => array('view' => NULL, 'options' => NULL)),
+    'calendar_month__mm_calendar' => array(
+        'file' => 'mm_schedule_theme.inc',
+        'variables' => array('view' => NULL, 'options' => NULL)),
+    'calendar_week__mm_calendar' => array(
+        'file' => 'mm_schedule_theme.inc',
+        'variables' => array('view' => NULL, 'options' => NULL)),
+    'calendar_day__mm_calendar' => array(
+        'file' => 'mm_schedule_theme.inc',
+        'variables' => array('view' => NULL, 'options' => NULL)),
+    'calendar_view_ical__mm_calendar' => array(
+        'file' => 'mm_schedule_theme.inc',
+        'variables' => array('view' => NULL, 'options' => NULL)),
+    'mm_schedule_list' => array(
+        'file' => 'mm_schedule_theme.inc',
+        'variables' => array('view' => NULL)),
+    'mm_schedule' => array(
+        'file' => 'mm_schedule_theme.inc',
+        'variables' => array('hours' => NULL, 'days' => NULL, 'events' => NULL, 'options' => NULL)),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function mm_schedule_menu() {
+  $items = array();
+  $items['mm_schedule/add2mycalendar/mm/%mm_mmtid'] = array(
+    'title' => 'Add All to My Calendar',
+    'page callback' => '_mm_schedule_add_to_my_calendar',
+    'page arguments' => array(2, 3),
+    'access callback' => '_mm_schedule_add_all_to_my_calendar_access',
+    'access arguments' => array(3),
+  );
+  $items['mm_schedule/add2mycalendar/node/%node'] = array(
+    'title' => 'Add to My Calendar',
+    'page callback' => '_mm_schedule_add_to_my_calendar',
+    'page arguments' => array(2, 3),
+    'access callback' => '_mm_schedule_add_node_to_my_calendar_access',
+    'access arguments' => array(3),
+  );
+  $items['mm_schedule/del_event/%node/%node'] = array(
+    'title' => 'Remove event from calendar',
+    'page callback' => '_mm_schedule_remove_event_from_calendar',
+    'page arguments' => array(2, 3),
+    'access callback' => '_mm_schedule_remove_event_from_calendar_access',
+    'access arguments' => array(2, 3),
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_element_info().
+ */
+function mm_schedule_element_info() {
+  $type = array();
+  $date_elems = _date_elements();
+  if (isset($date_elems['date_combo'])) {
+    $type['mm_schedule_date_combo_all_day'] = $date_elems['date_combo'];
+    $type['mm_schedule_date_combo_all_day']['#process'][] = '_mm_schedule_date_combo_all_day_process';
+  }
+  return $type;
+}
+
+/**
+ * Implements hook_node_info().
+ */
+function mm_schedule_node_info() {
+  return array(
+    'mm_calendar' => array(
+      'name' => t('Event calendar'),
+      'base' => 'mm_schedule_mm_calendar',
+      'description' => t('Calendars display events in a date-based grid'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_mm_item_name().
+ */
+function mm_schedule_mm_item_name() {
+  return array(
+    MM_SCHEDULE_USER_CALENDAR_DEFAULT_NAME => t('[Calendar default]'),
+  );
+}
+
+/**
+ * Implement hook_mm_hidden_user_names().
+ */
+function mm_schedule_mm_hidden_user_names() {
+  return array(MM_SCHEDULE_USER_CALENDAR_DEFAULT_NAME);
+}
+
+/**
+ * Implements hook_mm_node_info().
+ */
+function mm_schedule_mm_node_info() {
+  return array(
+    // mm_event is a CCK content type, but we need to set flags to prevent
+    // MM from rendering and allowing users to create or reorder this node type.
+    'mm_event' => array(
+      MM_NODE_INFO_NO_RENDER => TRUE,
+      MM_NODE_INFO_ADD_HIDDEN => TRUE,
+      MM_NODE_INFO_NO_REORDER => TRUE,
+    )
+  );
+}
+
+/**
+ * Implements hook_mm_url_rewrite_outbound().
+ */
+function mm_schedule_mm_url_rewrite_outbound($mmtid, &$path, &$options, $original_path) {
+  $args = explode('/', $path);
+  if ($args[0] == '.mm_calendar') {
+    if (empty($mmtid)) {
+      // Normally, custom_url_rewrite_outbound() requires that the node
+      // actually exist on the current page, but at the time it tests this the
+      // URL is not yet correct.
+      $mm = mm_parse_args($term_ids, $oarg_list, $mmtid);
+      if (empty($mm)) return;
+    }
+
+    $query = array();
+    if (!empty($options['query'])) {
+      $query = explode('&', $options['query']);
+      foreach ($query as $key => $value)
+        if (strpos($value, 'mm_calendar=') === 0) {
+          unset($query[$key]);
+        }
+    }
+
+    array_shift($args);                           // skip .mm_calendar
+    if ($args && preg_match('{^\d+(\+|$)}', $args[0])) array_shift($args); // skip any node number
+
+    foreach ($args as $key => $value)
+      if (preg_match('{^[-0-9W]+$}', $value)) {
+        array_splice($args, $key + 1);
+        break;
+      }
+
+    // Preserve old mode (grid or list)
+    if (!empty($_GET['mm_calendar']) && preg_match('{^([a-z]+)(/|$)}', $_GET['mm_calendar'], $matches)) {
+      array_unshift($args, $matches[1]);
+    }
+
+    $query[] = 'mm_calendar=' . urlencode(join('/', $args));
+    $options['query'] = join('&', $query);
+    $path = "mm/$mmtid";
+  }
+  elseif (empty($options['query']) && !empty($_GET['mm_calendar'])) {
+    $options['query'] = drupal_http_build_query(array('destination' => "mm/$mmtid?mm_calendar=" . $_GET['mm_calendar']));
+  }
+}
+
+function mm_schedule_my_calendar_access() {
+  global $user;
+  return $user->uid > 0 && user_access('has personal calendar');
+}
+
+/**
+ * Implements hook_permission().
+ */
+function mm_schedule_permission() {
+  return array(
+    'has personal calendar' => array(
+      'title' => t('Create Personal Monster Menus Calendar'),
+      'description' => t('Allows user to create a personal Monster Menus calendar'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_access().
+ */
+function mm_schedule_mm_calendar_access($op, $node, $account) {
+  if ($op == 'create') {
+    // Only users with permission to do so may create this node type.
+    return user_access('create mm_calendars', $account);
+  }
+
+  // Users who create a node may edit or delete it later, assuming they have the
+  // necessary permissions.
+  if ($op == 'update' || $op == 'delete') {
+    if (user_access('edit own mm_calendars', $account) && ($account->uid == $node->uid)) {
+      return TRUE;
+    }
+  }
+}
+
+/**
+ * Implements hook_form().
+ */
+function mm_schedule_mm_calendar_form(&$node) {
+  drupal_set_title(!empty($node->nid) ? t('Edit a calendar') : t('Create a calendar'));
+
+  $type = node_type_get_type($node);
+  $form = array();
+  $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#required' => TRUE, '#default_value' => $node->title, '#weight' => -5);
+  return $form;
+}
+
+/**
+ * Implements hook_view().
+ */
+function mm_schedule_mm_calendar_view($node, $teaser = FALSE, $page = FALSE) {
+  global $user;
+
+  if ($teaser) {
+    $node->readmore = TRUE;
+    return $node;
+  }
+
+  mm_parse_args($term_ids, $oarg_list, $this_tid);
+  if (!isset($this_tid)) {
+    if (isset($node->mm_calendar_mmtid)) $this_tid = $node->mm_calendar_mmtid;
+    else {
+      $with_node = mm_content_get_by_nid($node->nid);
+      if (!count($with_node)) {
+        return $node;
+      }
+      $this_tid = $with_node[0];
+    }
+  }
+
+  $view = views_get_view('mm_calendar');
+  if (!$view) return $node;
+
+  // Set the granularity (month, day, week, etc.) of both arguments to the
+  // same default value.
+  if (isset($node->field_default_display))
+    $granularity = $view->display['default']->display_options['arguments']['date_argument']['granularity'] = $view->display['default']->display_options['arguments']['date_argument_1']['granularity'] = $node->field_default_display[0]['value'];
+
+  $args = array();
+  $displays = array('ical' => 'calendar_ical_1', 'list' => 'default', 'grid' => 'calendar_1');
+  $display_mode = isset($node->field_default_view[0]['value']) ? $node->field_default_view[0]['value'] : '';
+  if (empty($display_mode)) $display_mode = 'grid';
+  $display = $displays[$display_mode];
+
+  if (!empty($_GET['mm_calendar'])) {
+    $args = explode('/', $_GET['mm_calendar']);
+    // Is there a specific view mode in the URL?
+    if (isset($displays[$args[0]])) {
+      $display = $displays[$args[0]];
+      $display_mode = $args[0];
+      array_shift($args);
+    }
+
+    if (empty($args[0])) {
+      $args = array();
+    }
+    else {
+      // Make both arguments the same
+      $args[1] = $args[0];
+    }
+  }
+
+  $view->mm_first_month = isset($node->field_first_month[0]['value']) ? $node->field_first_month[0]['value'] : 1;
+  if (!$args && $granularity === 'year' && date('n') < $view->mm_first_month) {
+    // If using default args and the current month is before the start of the
+    // calendar year, show last year
+    $args[0] = $args[1] = date('Y') - 1;
+  }
+
+  $nids = array($node->nid);
+  if (!empty($node->mycalendar)) {
+    // Add calendar nodes that are "pushed" to this user
+    $select = db_select('mm_group', 'g');
+    $select->leftJoin('mm_virtual_group', 'v', 'v.vgid = g.vgid');
+    $select->join('content_field_mm_groups', 'c', 'c.field_mm_groups_value = g.gid');
+    $select->join('node', 'n', 'n.vid = c.vid');
+    $result = $select->fields('n', array('nid'))
+      ->distinct()
+      ->condition(db_or()
+        ->condition('v.uid', $user->uid)
+        ->condition(db_and()
+          ->condition('g.vgid', 0)
+          ->condition('g.uid', $user->uid)
+        )
+      )
+      ->execute();
+    foreach ($result as $row) {
+      if ($row->nid != $node->nid) $nids[] = $row->nid;
+    }
+  }
+
+  $view->mm_came_from = '';
+  if ($display_mode != 'ical') {
+    $args0 = isset($args[0]) ? $args[0] : '';
+    $view->mm_came_from = "$this_tid:$display_mode:$args0:$node->nid";
+  }
+
+  array_unshift($args, join('+', $nids));
+
+  $view->mm_node =& $node;    // used in monster_menus_preprocess_calendar_main()
+  $view->mmtid = $this_tid;
+  $view->mm_display_mode = $display_mode;
+  if (isset($node->mm_calendar_mmtid)) $view->mm_calendar_mmtid = $node->mm_calendar_mmtid;
+
+  $output = $view->execute_display($display, $args);
+  if ($display_mode == 'ical') exit();
+
+  // @todo: rewrite to use a render array
+  $node->content['mm_calendar'] = array(
+    '#markup' => $node->body . $output,
+    '#weight' => 1,
+  );
+  return $node;
+}
+
+/**
+ * Implements hook_views_pre_execute().
+ */
+function mm_schedule_views_pre_execute($view) {
+  // Move the starting and ending dates when the node's creator has said the
+  // year starts in a month other than January
+  if ($view->name == 'mm_calendar' && isset($view->mm_node) && isset($view->argument['date_argument']) && $view->argument['date_argument']->granularity == 'year' && $view->mm_first_month > 1) {
+    if (!isset($view->mm_fixed_month)) {
+      $offset = '+' . ($view->mm_first_month - 1) . ' month';
+      date_modify($view->argument['date_argument']->min_date, $offset);
+      date_modify($view->argument['date_argument']->max_date, $offset);
+      $view->mm_fixed_month = TRUE;
+    }
+
+    // Unfortunately, the query is first built before $view->date_info is fully populated
+    if (isset($view->date_info->min_date)) {
+      $view->date_info->min_date = $view->argument['date_argument']->min_date;
+      $view->date_info->max_date = $view->argument['date_argument']->max_date;
+    }
+
+    $view->date_info->min_date_date = date_format($view->argument['date_argument']->min_date, DATE_FORMAT_DATE);
+    $view->date_info->max_date_date = date_format($view->argument['date_argument']->max_date, DATE_FORMAT_DATE);
+
+    $from = array(
+      '{(DATE_FORMAT\(ADDTIME\(.*?\),\s*\')%Y(\'\)\s*>=\s*)\'\d\d\d\d\'}',
+      '{(DATE_FORMAT\(ADDTIME\(.*?\),\s*\')%Y(\'\)\s*<=\s*)\'\d\d\d\d\'}');
+    $to = array(
+      '\1%Y-%m\2\'' . substr($view->date_info->min_date_date, 0, 7) . "'",
+      '\1%Y-%m\2\'' . substr($view->date_info->max_date_date, 0, 7) . "'");
+    $view->build_info['query'] = preg_replace($from, $to, $view->build_info['query']);
+    $view->build_info['count_query'] = preg_replace($from, $to, $view->build_info['count_query']);
+  }
+}
+
+/**
+ * Implements hook_mm_copy_tree_node_alter().
+ */
+function mm_schedule_mm_copy_tree_node_alter(&$node, $old_catlist) {
+  if ($node->type == 'mm_calendar') {
+    // When copying a calendar node, update the list of subscribed pages to
+    // point to the new node's location
+    $old_catlist = array_keys($old_catlist);
+    if (!empty($node->field_mm_pages))
+      foreach ($node->field_mm_pages as $pos => $mm_page)
+        if (array_search($mm_page['value'], $old_catlist) !== FALSE) {
+          $new_cat = array_keys($node->mm_catlist);
+          $node->field_mm_pages[$pos]['value'] = $new_cat[0];
+        }
+  }
+}
+
+function mm_schedule_preprocess_calendar_main(&$vars) {
+  $view = $vars['view'];
+  if (isset($view->mm_node) && $view->mm_node->type == 'mm_calendar') {
+    $mmtid = $view->mmtid;
+    $calendar_mmtid = isset($view->mm_calendar_mmtid) ? $view->mm_calendar_mmtid : $mmtid;
+
+    if (empty($view->mm_node->field_allow_mode_change[0]['value'])) {
+      $vars['calendar_links'] = array();
+    }
+    else {
+      // Grid/List
+      $params = array(
+        'grid' => array('list', t('List'), t('View this calendar in a simple list')),
+        'list' => array('grid', t('Grid'), t('View this calendar in a grid')),
+      );
+      $new_mode = $params[$view->mm_display_mode];
+      $get = $_GET;
+      $get['mm_calendar'] = join('/', array($new_mode[0], isset($get['mm_calendar']) ? preg_replace('{^[a-z]+(/|$)}', '', $get['mm_calendar']) : ''));
+      $vars['calendar_links'][] = array(
+        'title' => $new_mode[1],
+        'href' => "mm/$mmtid",
+        'query' => drupal_http_build_query(drupal_get_query_parameters($get, array('q'))),
+        'attributes' => array(
+          'title' => $new_mode[2],
+          'class' => array('schedule-link-space-before'),
+          'rel' => 'nofollow',
+        ),
+      );
+    }
+
+    // Export
+    if (!empty($view->mm_node->field_show_export[0]['value'])) {
+      $get = $_GET;
+      $get['mm_calendar'] = join('/', array('ical', isset($get['mm_calendar']) ? preg_replace('{^[a-z]+(/|$)}', '', $get['mm_calendar']) : ''));
+      $vars['calendar_links'][] = array(
+        'title' => t('Export'),
+        'href' => "mm/$mmtid",
+        'query' => drupal_http_build_query(drupal_get_query_parameters($get, array('q'))),
+        'attributes' => array(
+          'title' => t('Export this calendar view in iCal format'),
+          'class' => array('schedule-link-space-before'),
+          'rel' => 'nofollow',
+        ),
+      );
+    }
+
+    // Add event
+    if (_mm_schedule_can_add_event($calendar_mmtid)) {
+      $query = array('destination' => "mm/$mmtid%3F" . drupal_http_build_query(drupal_get_query_parameters($get, array('q'))));
+      if (!empty($_GET['mm_calendar'])) $query['mm_event_start'] = date_format($view->date_info->min_date, DATE_FORMAT_DATETIME);
+      $vars['calendar_links'][] = array(
+        'title' => t('Add event'),
+        'href' => "mm/$calendar_mmtid/contents/add/mm_event",
+        'query' => $query,
+        'attributes' => array(
+          'title' => t('Add a new event to this calendar'),
+          'class' => array('schedule-link-space-before'),
+        ),
+      );
+    }
+
+    unset($view->feed_icon);
+  }
+}
+
+/**
+ * Implements hook_mm_links_order().
+ */
+function mm_schedule_mm_links_order(&$order) {
+  $order = array_merge($order, array(
+    '{^Day}i',
+    '{^Week}i',
+    '{^Month}i',
+    '{^Year}i',
+    '{^List}i',
+    '{^Grid}i',
+    '{^Export}i',
+    '{^Add event}i',
+    '{^Add to My Calendar}i',
+    '{^Add All to My Calendar}i',
+    '{^Return to Calendar}i',
+  ));
+}
+
+/**
+ * Implements hook_link_alter().
+ */
+function mm_schedule_link_alter(&$links, &$node) {
+  if ($node->type == 'mm_calendar')
+    foreach ($links as $num => $link)
+      if (empty($link['query'])) {
+        $mm = mm_parse_args($term_ids, $oarg_list, $this_tid, $link['href']);
+        if ($oarg_list[0] == 'node') {
+          $query = drupal_http_build_query(drupal_get_query_parameters($get, array('q')));
+          if (!empty($query)) $query = '%3F' . $query;
+          $links[$num]['query'] = array('destination' => "mm/$this_tid$query");
+        }
+      }
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function mm_schedule_node_view($node, $view_mode) {
+  $links = array();
+  if ($view_mode != 'teaser' && isset($node) && node_access('view', $node)) {
+    if ($node->type == 'mm_event') {
+      if (isset($_GET['destination'])) {
+        $query = drupal_http_build_query(array('destination' => $_GET['destination']));
+        $dest = parse_url(urldecode($_GET['destination']));
+        $links[] = array('title' => t('Return to Calendar'), 'href' => $dest['path'], 'query' => $dest['query']);
+      }
+      else {
+        $mm = mm_parse_args($term_ids, $oarg_list, $this_tid);
+        $query = $this_tid ? array('destination' => "mm/$this_tid") : '';
+      }
+
+      if (user_access('has personal calendar') && !mm_content_node_is_recycled($node)) {
+        list($cat_exists, $node_exists) = mm_schedule_my_calendar_exists();
+        if (empty($node_exists) || mm_schedule_event_is_on_calendar($node_exists, 'node', $node) === FALSE) {
+          $links[] = array(
+            'title' => t('Add to My Calendar'),
+            'href' => 'mm_schedule/add2mycalendar/node/' . $node->nid,
+            'query' => $query,
+            'attributes' => array(
+              'title' => t('Add all occurrences of this event to your personal calendar'),
+            ),
+          );
+        }
+      }
+    }
+    elseif ($node->type == 'mm_calendar') {
+      if (user_access('has personal calendar') && !isset($node->mm_calendar_mmtid)) {
+        $mm = mm_parse_args($term_ids, $oarg_list, $this_tid);
+        $query = $this_tid ? array('destination' => "mm/$this_tid") : '';
+
+        list($cat_exists, $node_exists) = mm_schedule_my_calendar_exists();
+        if (empty($node_exists) || mm_schedule_event_is_on_calendar($node_exists, 'mm', $this_tid) === FALSE) {
+          $links[] = array(
+            'title' => t('Add All to My Calendar'),
+            'href' => 'mm_schedule/add2mycalendar/mm/' . $this_tid,
+            'query' => $query,
+            'attributes' => array(
+              'title' => t('Add all events on this calendar to your personal calendar'),
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  if ($links) {
+    $node->content['links'][$node->type] = array(
+      '#links' => $links,
+      '#attributes' => array('class' => array('links', 'inline')),
+    );
+  }
+}
+
+/**
+ * Implements hook_views_plugins
+ */
+function mm_schedule_views_plugins() {
+  if (function_exists('calendar_ical_views_plugins')) {
+    module_load_include('inc', 'mm_schedule', 'mm_schedule.views');
+    return _mm_schedule_views_plugins();
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function mm_schedule_form_node_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'mm_event_node_form') {
+    $form['scheduling']['#access'] = FALSE;
+    $form['mm_appearance']['sticky']['#access'] = FALSE;
+    $form['comment_settings']['#access'] = FALSE;
+    $form['mm_categories']['#access'] = FALSE;
+    if (isset($form['field_start_datetime'])) {
+      $form['field_start_datetime']['#type'] = 'mm_schedule_date_combo_all_day';
+      $form['field_start_datetime']['#after_build'][] = '_mm_schedule_date_combo_all_day_after_build';
+      $form['field_start_datetime']['rrule']['#after_build'][] = '_mm_schedule_rrule_after_build';
+
+      if (!isset($form['#node']->nid)) {
+        $tz = date_default_timezone();
+        if (isset($_GET['mm_event_start']))
+          $start = date_create($_GET['mm_event_start'], $tz);
+
+        if (empty($start)) {
+          $start = date_create($form['field_start_datetime']['#default_value']['value'], $tz);
+          date_modify($start, '+1 hour');
+          date_modify($start, '-' . date_format($start, 'i') . ' minutes');
+        }
+
+        if (isset($_GET['mm_event_end']))
+          $end = date_create($_GET['mm_event_end'], $tz);
+
+        if (empty($end)) {
+          $end = clone $start;
+          date_modify($end, '+1 hour');
+        }
+
+        $form['field_start_datetime']['#default_value']['value']  = date_format($start, 'Y-m-d H:i:00');
+        $form['field_start_datetime']['#default_value']['value2'] = date_format($end, 'Y-m-d H:i:00');
+      }
+    }
+  }
+  elseif ($form_id == 'mm_calendar_node_form') {
+    // Put display options into a table
+    $old_weight = $form['group_appearance']['field_default_display']['#weight'];
+    $form['group_appearance']['field_default_display']['#weight'] = 2001;
+    $form['group_appearance']['field_default_display']['#required'] = FALSE;
+    $form['group_appearance']['field_default_view']['#weight'] = 2002;
+    $form['group_appearance']['field_default_view']['#required'] = FALSE;
+    $form['group_appearance']['defaults'] = array(
+      '#weight' => $old_weight,
+      '#theme' => 'form_panel_table',
+      'field_default_display' => $form['group_appearance']['field_default_display'],
+      'field_default_view' => $form['group_appearance']['field_default_view']
+    );
+    unset($form['group_appearance']['field_default_display']);
+    unset($form['group_appearance']['field_default_view']);
+
+    // Move Week/Day Grid Settings
+    $form['group_week_day']['#weight'] = 98;
+    $form['group_week_day']['#theme'] = 'form_panel_table';
+    $form['group_week_day']['field_wd_start']['#weight'] = 2001;
+    $form['group_week_day']['field_wd_start']['#required'] = FALSE;
+    $form['group_week_day']['field_wd_end']['#weight'] = 2002;
+    $form['group_week_day']['field_wd_end']['#required'] = FALSE;
+    $form['group_week_day']['field_wd_increment']['#weight'] = 2003;
+    $form['group_week_day']['field_wd_increment']['#required'] = FALSE;
+    $form['group_appearance']['group_week_day'] = $form['group_week_day'];
+    unset($form['group_week_day']);
+
+    // Move Year Settings
+    $form['group_year']['#weight'] = 99;
+    $form['group_year']['field_first_month']['#required'] = FALSE;
+    $form['group_appearance']['group_year'] = $form['group_year'];
+    unset($form['group_year']);
+
+    // Only admins can push to My Calendar
+    $form['group_push']['#access'] = user_access('administer all menus');
+  }
+}
+
+/**
+ * Implements hook_mm_delete().
+ */
+function mm_schedule_mm_delete($mmtids, $nids) {
+  if ($mmtids) {
+    db_delete('content_field_mm_pages')
+      ->condition('field_mm_pages_value', $mmtids)
+      ->execute();
+  }
+}
+
+/**
+ * Implements hook_nodeapi().
+ */
+function mm_schedule_nodeapi(&$node, $op, $a3, $a4) {
+  switch ($op) {
+    case 'presave':
+      if ($node->type != 'mm_calendar') break;
+
+      // For each page the user has chosen, load any mm_calendar nodes and add
+      // the pages and nodes it refers to, recursively
+      $nodes = $pages = array();
+      if (is_array($node->field_mm_pages))
+        foreach ($node->field_mm_pages as $page)
+          if (!empty($page['value'])) $pages[$page['value']] = TRUE;
+
+      if (isset($node->field_mm_events) && is_array($node->field_mm_events))
+        foreach ($node->field_mm_events as $mm_event)
+          if (!empty($mm_event['nid'])) $nodes[$mm_event['nid']] = TRUE;
+
+      if ($pages) {
+        $test_pages = array_keys($pages);
+        $skip_nids = array($node->nid);
+        do {
+          $select = db_select('mm_node2tree', 'n2');
+          $select->join('node', 'n', 'n.nid = n2.nid');
+          $result = $select->fields('n', array('nid'))
+            ->condition('n.type', 'mm_calendar')
+            ->condition('n2.mmtid', $test_pages)
+            ->condition('n.nid', $skip_nids, 'NOT IN')
+            ->execute();
+          $test_pages = array();
+          foreach ($result as $other) {
+            $skip_nids[] = $other->nid;
+            if (mm_content_user_can_node($other, MM_PERMS_READ) && ($other_node = node_load($other->nid))) {
+              if (isset($other_node->field_mm_events) && is_array($other_node->field_mm_events))
+                foreach ($other_node->field_mm_events as $mm_event)
+                  $nodes[$mm_event['nid']] = TRUE;
+
+              if (is_array($other_node->field_mm_pages))
+                foreach ($other_node->field_mm_pages as $page)
+                  if (!isset($pages[$page['value']])) {
+                    $pages[$page['value']] = TRUE;
+                    $test_pages[] = $page['value'];
+                  }
+            }
+          }
+        }
+        while ($test_pages);
+      }
+
+      $node->field_mm_pages = $node->field_mm_events = array();
+      foreach (array_keys($pages) as $page)
+        $node->field_mm_pages[]['value'] = $page;
+
+      foreach (array_keys($nodes) as $nid)
+        $node->field_mm_events[]['nid'] = $nid;
+  }
+}
+
+function mm_schedule_my_calendar() {
+  global $user;
+  $_mm_mmtid_of_node = &drupal_static('_mm_mmtid_of_node');
+
+  if ($user->uid == 0) return;
+
+  list($mmtid, $node) = mm_schedule_create_my_calendar();
+
+  if (empty($mmtid)) return;
+
+  if (!mm_content_user_can_node($node, MM_PERMS_READ)) return;
+
+  if (mm_content_user_can_node($node, MM_PERMS_WRITE)) $user->mycalendar_nid = $node->nid;
+
+  $node->mycalendar = TRUE;
+
+  $node->mm_calendar_mmtid = $mmtid;
+  $_mm_mmtid_of_node[$node->nid] = $mmtid;
+
+  return mm_node_show($node);
+}
+
+function mm_schedule_my_calendar_exists($user_obj = NULL) {
+  global $user;
+
+  if (!$user_obj) $user_obj = $user;
+  $cat_exists = mm_content_get(array('alias' => MM_SCHEDULE_USER_CALENDAR_ALIAS,
+    'parent' => $user_obj->user_mmtid));
+  if (count($cat_exists)) {
+    $exists = $cat_exists[0]->mmtid;
+    $nid = _mm_schedule_calendar_on_page($exists);
+    if (!empty($nid)) {
+      return array($exists, node_load($nid));
+    }
+    return array($exists, NULL);
+  }
+}
+
+function mm_schedule_create_my_calendar() {
+  global $user;
+
+  if (empty($user->user_mmtid) || $user->uid <= 0 || !user_access('create mm_calendars')) return;
+
+  $default_cat = mm_schedule_create_default_calendar();
+  if (!is_numeric($default_cat)) return;
+
+  // If page exists, but not node, copy just the node.
+  // Otherwise, copy everything.
+  $copy_page = TRUE;
+  $dest = $user->user_mmtid;
+  list($cat_exists, $node) = mm_schedule_my_calendar_exists();
+  if (!empty($cat_exists)) {
+    $copy_page = FALSE;
+    $dest = $cat_exists;
+    if (!empty($node)) return array($dest, $node);
+  }
+
+  $copy_params = array(
+    MM_COPY_ALIAS =>    MM_SCHEDULE_USER_CALENDAR_ALIAS,
+    MM_COPY_CONTENTS => TRUE,
+    MM_COPY_NAME =>     t('My Calendar'),
+    MM_COPY_OWNER =>    $user->uid,
+    MM_COPY_RECUR =>    FALSE,
+    MM_COPY_TREE =>     $copy_page,
+  );
+  $new_tid = mm_content_copy($default_cat, $dest, $copy_params);
+
+  if (!is_numeric($new_tid)) {
+    watchdog('mm_schedule', 'Error copying default user calendar: %err', array('%err' => $new_tid), WATCHDOG_ERROR);
+    return;
+  }
+
+  $nid = _mm_schedule_calendar_on_page($new_tid);
+  if (!empty($nid) && ($node = node_load($nid))) {
+    $node->revision = FALSE;
+    $node->field_mm_pages = array(array('value' => $new_tid));
+    $node->uid = $user->uid;
+    $node->name = $user->name;
+    $node->owner = array($user->uid => $user->name);
+    node_save($node);
+    return array($new_tid, $node);
+  }
+}
+
+function _mm_schedule_get_node_link($node, $default = NULL) {
+  if (isset($node->url)) {
+    return $node->url;
+  }
+  elseif (empty($node->remote) && is_numeric($node->nid)) {
+    return "node/$node->nid";
+  }
+  elseif (!empty($default)) {
+    return $default;
+  }
+}
+
+/**
+ * This function overrides template_date_nav_title() in date/theme/theme.inc
+ */
+function phptemplate_date_nav_title($granularity, $view, $link = FALSE, $format = NULL) {
+  if ($view->date_info->granularity == 'year' && $granularity == 'year' && $view->mm_first_month > 1) {
+    return substr($view->date_info->min_date_date, 0, 4) . ' - ' . substr($view->date_info->max_date_date, 0, 4);
+  }
+
+  return theme_date_nav_title($granularity, $view, $link, $format);
+}
+
+/* Overrides theme_jcalendar_view() in modules/calendar/jcalendar/jcalendar.module */
+function phptemplate_jcalendar_view($node) {
+  global $user;
+
+  $output = drupal_render(node_view($node, 'teaser'));
+  $links = array();
+  if (is_numeric($node->nid)) {
+    $prefix = '';
+    $options = array();
+    $args = explode(':', $_GET['q']);
+    if (!empty($args[5])) {
+      $mmtid = $args[5];
+      $mm_calendar = $args[6] . '/' . $args[7];
+      $options = array('query' => array('destination' => "mm/$mmtid%3F" . drupal_http_build_query(array('mm_calendar' => $mm_calendar))));
+      $prefix = "mm/$mmtid/";
+    }
+
+    $links[] = l(t('Details'), $prefix . _mm_schedule_get_node_link($node), $options);
+
+    if (node_access('update', $node))
+      $links[] = l(t('Edit'), "{$prefix}node/$node->nid/edit", $options);
+
+    if (_mm_menu_access_node_delete($node)) {
+      $links[] = l(mm_content_node_is_recycled($node) ? t('Delete permanently') : t('Delete'),
+        "{$prefix}node/$node->nid/delete", $options);
+    }
+
+    $is_signed_up = FALSE;
+    if (!empty($node->signup_status) && module_exists('signup')) {
+      $is_signed_up = db_select('signup_log', 'l')
+        ->condition('l.nid', $node->nid)
+        ->condition('l.uid', $user->uid)
+        ->countQuery()->execute()->fetchField();
+      $text = $is_signed_up ? t('Cancel sign up') : t('Sign up');
+      $links[] = l($text, $prefix . _mm_schedule_get_node_link($node), $options);
+    }
+
+    if (!$is_signed_up && ($cal_nid = intval($args[8])) != 0 && ($cal_node = node_load($cal_nid)) && _mm_schedule_remove_event_from_calendar_access($cal_node, $node)) {
+      $options2 = $options;
+      $options2['attributes']['id'] = 'del-from-cal';
+      $options2['attributes']['title'] = t('Remove this event from the current calendar');
+      $url = 'mm_schedule/del_event/' . $cal_node->nid . '/' . $node->nid;
+      $links[] = l(t('Remove from calendar'), $url, $options2);
+      $output .= '<script type="text/javascript">' . _mm_schedule_subrequest_js('del-from-cal', "$url/js", "div[id^=calendar:$node->nid:]") . '</script>';
+    }
+
+    if (mm_schedule_my_calendar_access() && !mm_content_node_is_recycled($node)) {
+      list($cat_exists, $node_exists) = mm_schedule_my_calendar_exists();
+      if (empty($node_exists) || mm_schedule_event_is_on_calendar($node_exists, 'node', $node) === FALSE) {
+        $options2 = $options;
+        $options2['attributes']['id'] = 'add-to-my-cal';
+        $options2['attributes']['title'] = t('Add all occurrences of this event to your personal calendar');
+        $url = 'mm_schedule/add2mycalendar/node/' . $node->nid;
+        $links[] = l(t('Add to My Calendar'), $url, $options2);
+        $output .= '<script type="text/javascript">' . _mm_schedule_subrequest_js('add-to-my-cal', "$url/js") . '</script>';
+      }
+    }
+  }
+  else {
+    $links[] = l(t('Details'), calendar_get_node_link($node));
+  }
+  $output .= '<div id="nodelink">' . join(' ', $links) . '</div>';
+  return $output;
+}
+
+function mm_schedule_create_default_calendar() {
+  $users_tid = mm_content_users_mmtid();
+  $default_cat = mm_content_get(array('name' => MM_SCHEDULE_USER_CALENDAR_DEFAULT_NAME, 'parent' => $users_tid));
+  if (count($default_cat)) $default_cat = $default_cat[0]->mmtid;
+  else {
+    $default_cat = mm_content_insert_or_update(TRUE, $users_tid, array(
+      'name' => MM_SCHEDULE_USER_CALENDAR_DEFAULT_NAME,
+      'default_mode' => '',
+      'uid' => 1,
+      'flags' => array('limit_alias' => '', 'limit_move' => '', 'limit_delete' => '', 'limit_hidden' => '', 'limit_location' => '', 'limit_name' => '', 'limit_write' => ''),
+      'node_info' => FALSE,
+    ));
+    if (!$default_cat) {
+      watchdog('mm_schedule', 'Error creating default user calendar', array(), WATCHDOG_ERROR);
+      return t('Error creating default user calendar');
+    }
+  }
+
+  $nodes = mm_content_get_nids_by_mmtid($default_cat, 1);
+  if (!count($nodes)) {
+    $admin = user_load(1);
+    $form_state = array();
+    $node = array('type' => 'mm_calendar');
+    $form_state['values'] = array(
+      'uid' => $admin->uid,
+      'name' => $admin->name,
+      'title' => t('My Calendar'),
+      'body' => '',
+      'status' => 1,
+      'comment' => 0,
+      'mm_catlist' => array($default_cat => ''),
+      'owner' => array($admin->uid => $admin->name),
+      'groups_w' => array(),
+      'users_w' => array(),
+      'show_node_info' => 0,
+      '_via_drupal_form_submit' => TRUE,
+      'op' => t('Save'),
+      'field_wd_increment' => '',
+    );
+    $form_state['node'] = $node;
+    module_load_include('inc', 'node', 'node.pages');
+    drupal_form_submit('mm_calendar_node_form', $form_state, (object)$node);
+  }
+
+  return $default_cat;
+}
+
+function _mm_schedule_calendar_on_page($mmtid) {
+  // Note: Was formerly cached using mm_query_result()
+  $select = db_select('mm_node2tree', 'n2');
+  $select->join('node', 'n', 'n.nid = n2.nid');
+  $select->fields('n2', array('nid'))
+    ->condition('n.type', 'mm_calendar')
+    ->condition('n2.mmtid', $mmtid)
+    ->orderBy('n.created')
+    ->range(0, 1);
+  return $select->execute()->fetchField();
+}
+
+function _mm_schedule_add_node_to_my_calendar_access($node) {
+  return mm_schedule_my_calendar_access() && node_access('view', $node);
+}
+
+function _mm_schedule_add_all_to_my_calendar_access($mmtid) {
+  return mm_schedule_my_calendar_access() && mm_content_user_can($mmtid, MM_PERMS_READ);
+}
+
+function _mm_schedule_remove_event_from_calendar_access($cal_node, $node) {
+  return mm_content_user_can_node($cal_node, MM_PERMS_WRITE) && mm_schedule_event_is_on_calendar($cal_node, 'node', $node->nid) === 'node';
+}
+
+function mm_schedule_event_is_on_calendar($cal_node, $type, $node_or_nid_or_mmtid) {
+  if ($type == 'mm') {
+    if (is_array($cal_node->field_mm_pages))
+      foreach ($cal_node->field_mm_pages as $page)
+        if ($page['value'] == $node_or_nid_or_mmtid) return 'mm';
+  }
+  else {
+    $nid = is_object($node_or_nid_or_mmtid) ? $node_or_nid_or_mmtid->nid : $node_or_nid_or_mmtid;
+    if (isset($cal_node->field_mm_events) && is_array($cal_node->field_mm_events))
+      foreach ($cal_node->field_mm_events as $event)
+        if ($event['nid'] == $nid) return 'node';
+
+    if (is_array($cal_node->field_mm_pages)) {
+      $test_pages = array();
+      foreach ($cal_node->field_mm_pages as $page)
+        $test_pages[] = $page['value'];
+
+      // Note: Was formerly cached using mm_query_result()
+      $numNodes = db_select('mm_node2tree', 'n2t')
+        ->condition('n2t.mmtid', $test_pages, 'IN')
+        ->condition('n2t.nid', $nid)
+        ->countQuery()->execute()->fetchField();
+      if ($numNodes) return 'mm';
+    }
+  }
+
+  return FALSE;
+}
+
+function _mm_schedule_remove_event_from_calendar($cal_node, $node, $js = NULL) {
+  if (isset($cal_node->field_mm_events) && is_array($cal_node->field_mm_events))
+    foreach ($cal_node->field_mm_events as $index => $event)
+      if ($event['nid'] == $node->nid) {
+        $cal_node->revision = FALSE;
+        unset($cal_node->field_mm_events[$index]);
+        node_save($cal_node);
+        break;
+      }
+
+  $return = t('All occurrences of this event have been removed from the calendar.');
+  if (empty($js)) {
+    if (isset($_GET['destination'])) {
+      drupal_set_message($return);
+      drupal_goto();
+    }
+    return $return;
+  }
+
+  $GLOBALS['devel_shutdown'] = FALSE;
+  drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+  print $return;
+  exit();
+}
+
+function _mm_schedule_add_to_my_calendar($type, $node_or_mmtid, $js = NULL) {
+  list($mmtid, $cal_node) = mm_schedule_create_my_calendar();
+
+  $return = '';
+  if (empty($mmtid)) {
+    $return = t('A personal calendar could not be created.');
+  }
+  elseif (!mm_content_user_can_node($cal_node, MM_PERMS_WRITE)) {
+    $return = t('You do not have permission to modify your personal calendar.');
+  }
+  else {
+    if ($type == 'mm') {    // all events using mmtid
+      if (!mm_content_user_can($node_or_mmtid, MM_PERMS_READ)) {
+        $return = t('You do not have permission to read the source calendar.');
+      }
+      elseif (mm_schedule_event_is_on_calendar($cal_node, $type, $node_or_mmtid) !== FALSE) {
+        $return = t('All events from this calendar are already present on your personal calendar.');
+      }
+      else {
+        $cal_node->revision = FALSE;
+        $cal_node->field_mm_pages[] = array('value' => $node_or_mmtid);
+        node_save($cal_node);
+        $return = t('All events from this calendar have been added to your personal calendar.');
+      }
+    }
+    else {                  // single event using node
+      if ($node_or_mmtid->type != 'mm_event') {
+        $return = t('Incorrect node type');
+      }
+      elseif (mm_schedule_event_is_on_calendar($cal_node, $type, $node_or_mmtid) !== FALSE) {
+        $return = t('This event is already present on your personal calendar.');
+      }
+      else {
+        $cal_node->revision = FALSE;
+        $cal_node->field_mm_events[] = array('nid' => $node_or_mmtid->nid);
+        node_save($cal_node);
+        $return = t('This event has been added to your personal calendar.');
+      }
+    }
+  }
+
+  if (empty($js)) {
+    if (isset($_GET['destination'])) {
+      drupal_set_message($return);
+      drupal_goto();
+    }
+    return $return;
+  }
+
+  $GLOBALS['devel_shutdown'] = FALSE;
+  drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+  print $return;
+  exit();
+}
+
+function _mm_schedule_cancel_or_insert_signup($signup, $mode) {
+  global $user;
+
+  $user_obj = user_load($signup->uid);
+  if ($user_obj && $user_obj->uid) {
+    list($mmtid, $cal_node) = mm_schedule_my_calendar_exists($user_obj);
+
+    if ($mode == 'insert' && empty($cal_node)) {
+      list($mmtid, $cal_node) = mm_schedule_create_my_calendar();
+    }
+
+    if (!empty($mmtid) && !empty($cal_node) && mm_content_user_can_node($cal_node, MM_PERMS_WRITE, $user_obj)) {
+      $found = FALSE;
+      if (isset($cal_node->field_mm_events) && is_array($cal_node->field_mm_events)) {
+        foreach ($cal_node->field_mm_events as $index => $subscribed) {
+          if ($subscribed['nid'] == $signup->nid) {
+            $found = $index;
+            break;
+          }
+        }
+      }
+
+      $cal_node->revision = FALSE;
+      if ($mode == 'cancel' && $found !== FALSE) {
+        unset($cal_node->field_mm_events[$index]);
+        node_save($cal_node);
+        if ($signup->uid == $user->uid) {
+          drupal_set_message(t('This event has been removed from your personal calendar.'));
+        }
+      }
+      elseif ($mode == 'insert' && $found === FALSE) {
+        $cal_node->field_mm_events[] = array('nid' => $signup->nid);
+        node_save($cal_node);
+        if ($signup->uid == $user->uid) {
+          drupal_set_message(t('This event has been added to your personal calendar.'));
+        }
+      }
+    }
+  }
+}
+
+function _mm_schedule_date_combo_all_day_process($element, &$form_state, $form) {
+  $is_all_day = FALSE;
+  if (is_string($element['#value']['value'])) {
+    $granularity = $element['value']['#field']['granularity'];
+    $date1 = empty($element['#value']['value']) ? date('Y-m-d') : substr($element['#value']['value'], 0, 10);
+    $all_day1 = "$date1 00:00:00";
+    $date2 = empty($element['#value']['value2']) ? date('Y-m-d') : substr($element['#value']['value2'], 0, 10);
+    $all_day2 = date_limit_value("$date2 23:59:59", $granularity);
+    $is_all_day = $element['#value']['value'] == $all_day1 && $element['#value']['value2'] == $all_day2;
+    $time_granularity = array_intersect($granularity, array('hour', 'minute', 'second'));
+    $time_format = date_popup_format_to_popup_time(date_limit_format($element['value']['#date_format'], $time_granularity));
+    $min_time = date($time_format, date_convert($all_day1, DATE_DATETIME, DATE_UNIX, date_default_timezone_name()));
+    $max_time = date($time_format, date_convert($all_day2, DATE_DATETIME, DATE_UNIX, date_default_timezone_name()));
+  }
+  else {
+    // @todo: This code does not work, because #post is not present
+    $min_time = $element['#post'][$element['#field_name']]['all_day_min_time'];
+    $max_time = $element['#post'][$element['#field_name']]['all_day_max_time'];
+  }
+
+  $element['all_day_min_time'] = array(
+    '#type' => 'hidden',
+    '#input' => TRUE,
+    '#value' => $min_time,
+  );
+  $element['all_day_max_time'] = array(
+    '#type' => 'hidden',
+    '#input' => TRUE,
+    '#value' => $max_time,
+  );
+  $element['#theme'] = 'form_panel_table';
+  $element['#form_panel_table_attributes'] = array('class' => array('mm-date-combo-all-day'));
+  $element['#form_panel_number_cols'] = TRUE;
+  $element['value']['#weight'] = 2001;
+  $element['value2']['#weight'] = 2002;
+  $element['is_all_day'] = array(
+    '#type' => 'checkbox',
+    '#input' => TRUE,
+    '#title' => t('All day event'),
+    '#default_value' => $is_all_day,
+    '#weight' => 2003,
+  );
+  if (isset($element['rrule'])) $element['rrule']['#weight'] = 3001;
+
+  drupal_add_js(_mm_schedule_date_combo_js($element['#id'], $element['#field_name']), 'inline', 'footer');
+  return $element;
+}
+
+function _mm_schedule_date_combo_all_day_after_build($element, &$form_state) {
+  if (is_array($element['value']['#value']) && is_array($element['value2']['#value']) && $form_state['values'][$element['#name']]['is_all_day']) {
+    // @todo: This code does not work, because #post is not present
+    $element['value']['#value']['time'] = $element['#post'][$element['#name']]['value']['time'] = $form_state['values'][$element['#name']]['all_day_min_time'];
+    $element['value2']['#value']['time'] = $element['#post'][$element['#name']]['value2']['time'] = $form_state['values'][$element['#name']]['all_day_max_time'];
+  }
+  return $element;
+}
+
+function _mm_schedule_rrule_after_build($element, &$form_state) {
+  if (isset($element['FREQ'])) {
+    // Change "Days" to "Day(s)" (etc.) in the frequency list
+    $element['FREQ']['#options'] = preg_replace('{s$}', '(s)', $element['FREQ']['#options']);
+  }
+
+  if (isset($element['advanced'])) {
+    // Wordsmithing
+    $element['advanced']['#title'] = t('More options for recurring events');
+    $element['advanced']['#description'] = t('If your recurring event will not occur on regularly repeating days, select the specific months and days that your event will recur. Use the “Except” box for days that the event will not take place (such as a holiday).');
+  }
+
+  return $element;
+}
+
+function _mm_schedule_date_timestamp_get($date) {
+  return isset($date->timestamp) ? $date->timestamp : $date->format('U');
+}
+
+function _mm_schedule_can_add_event($calendar_mmtid) {
+  return $calendar_mmtid && mm_content_user_can($calendar_mmtid, MM_PERMS_APPLY) && user_access('create mm_event content') && (user_access('administer all menus') || array_search('mm_event', mm_content_resolve_cascaded_setting('allowed_node_types', $calendar_mmtid, $types_at, $types_parent)) !== FALSE);
+}
+
+function _mm_schedule_date_combo_js($id, $name, $delta = '') {
+  if (!empty($delta)) $delta = "-$delta";
+  return <<<EOJ
+(function (\$) {
+Drupal.behaviors.MMDateCombo = function(context) {
+  \$('#{$id}-value{$delta}-wrapper:not(.mm-date-combo-processed)', context)
+    .addClass('mm-date-combo-processed')
+    .parents('fieldset')
+      .each(function() {
+        var check = \$('#{$id}-is-all-day{$delta}');
+        var outerDivs = \$('#{$id}-value{$delta}-timeEntry-popup-1-wrapper,#{$id}-value2{$delta}-timeEntry-popup-1-wrapper', this);
+        if (check.attr('checked'))
+          outerDivs.hide();
+        check.click(function() {
+          this.checked ? outerDivs.hide('fast') : outerDivs.show('fast');
+        });
+      });
+};
+})(jQuery);
+EOJ;
+}
+
+function _mm_schedule_subrequest_js($id, $url, $del_selector = '') {
+  $del_js = $del_selector ? '$(\'' . $del_selector . '\').fadeOut(5000);' : '';
+  return <<<EOJ
+(function (\$) {
+  \$('#$id:not(.$id-processed)')
+    .addClass('$id-processed')
+    .click(function() {
+      this.blur();
+      if (\$(this).attr('disabled')) return false;
+      var body = \$('#calpopup-body');
+      var div = \$('<div id="calpopup-body-result"><img src="' + var_path + '/images/throbber.gif" id="popthrobber-result" /></div>')
+        .css('top', body[0].offsetTop)
+        .insertAfter(body);
+      \$.ajax({
+        type:  "GET",
+        url:   Drupal.settings.basePath + "$url",
+        error: function(req, status) {
+          div
+            .html(status)
+            .fadeOut(5000);
+        },
+        success: function(msg) {
+          div
+            .html(msg)
+            .fadeOut(5000);
+          \$('#$id')
+            .attr('disabled', true)
+            .fadeOut(5000);$del_js
+        }
+      });
+      return false;
+    });
+})(jQuery);
+EOJ;
+}

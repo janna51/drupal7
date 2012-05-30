@@ -1,0 +1,5 @@
+name = "Wellesley Theme Background"
+description = "Module that allows users to choose the background of Wellesley Theme"
+core = 7.x
+package = "Development - WELLESLEY"
+version = 0.2-dev

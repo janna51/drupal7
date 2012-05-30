@@ -1,0 +1,262 @@
+@charset "UTF-8";
+
+
+body {
+    background-color: #FFFFFF;
+    color: #474747;
+    font-family: Arial,Verdana,sans-serif;
+    font-size: 12px;
+	/*text-align: left;*/
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	line-height: 20px;
+	padding: 0 5px;
+}
+
+ul li{
+	list-style: disc url("../image/bullet.png");
+	padding-left: 5px;
+	margin-left: 15px;
+}
+
+img { border: 0; }
+a.a-img { border: 0; text-decoration: none; }
+
+a { text-decoration: none;
+	color: #002776;
+ }
+
+a:visited { text-decoration: none;
+	color: #002776;
+ }/*make sure this does not conflic*/
+
+hr{ 
+	border: none 0;
+	border-top: 1px solid #002776;
+	width: 100%;
+	height: 1px;
+}
+	
+/*
+#maincontent{
+	width: 612px;
+	background: none repeat scroll 0 0 transparent;
+	position: relative;
+	float: left;
+	text-align: left;
+	padding-left: 15px;
+	padding-right: 15px;
+	color: #474747;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	line-height: 20px;
+	padding-bottom: 25px;	
+}*/
+
+
+h1, h2, h3, h4{
+	font-family: Georgia, "Times New Roman", Times, serif;
+	color: #002776;
+	font-size:100%;
+	font-weight:normal
+	}
+
+
+h3{
+	font-size: 18px;
+	line-height: 24px;
+	padding-bottom: 3px;
+	}		
+
+h4{
+	font-size: 14px;
+	line-height: 18px;
+	}
+	
+.introText, p.introText{
+  font-size: 24px;
+  line-height: 30px;
+  color: #002776;
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+	
+p{
+	padding-bottom: 15px;
+}
+
+a, a:visited{
+	color: #002776;
+	font-weight: bold;
+}
+
+a:hover{
+  	color: #00AEEA;
+	font-weight: bold;	
+}
+	
+
+/*LEFT COLUMN QUICK LINKS*/
+.quicklinks a {
+	color: #474747;
+	line-height: 20px;
+	}
+
+/*RIGHT COLUMN SIDEBAR*/	
+
+
+.more-link, .toggle {
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 10px;
+	text-decoration: underline;
+}
+
+/*Bluebackground Div*/
+.bluebackground{
+	background-color: #336ea6;
+	width: auto;
+	padding: 8px;
+	color: #FFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 14px;
+}
+
+
+.bluebackground h3 {
+	font-size: 18px;
+	color: #FFF;
+	font-family: Arial, Helvetica, sans-serif;
+	line-height: 20px;
+	font-weight: normal;
+	padding-bottom: 10px;
+	}
+	
+.numberLarge {
+    font-size: 24px;
+     line-height: 38px;
+    color: #ffffff;
+    font-family: Arial,Helvetica,sans-serif;
+    font-weight: normal;
+/*	padding-bottom:10px;*/
+	
+	}	
+	
+.bluebackground a, .bluebackground a:visited {
+	text-decoration: underline;
+	color: #FFF !important;
+}
+
+
+
+/*Blue Border Div*/
+.blueborder {
+	border: 1px solid #8a9aba;
+	width: auto;
+	padding: 8px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 14px;
+	font-weight: normal;
+	padding-bottom:10px;
+	line-height: 16px;
+}
+
+
+
+.blueborder h3 {
+	font-size: 14px;
+	color: #353865;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	line-height: 18px;
+	padding-bottom:10px;
+	}
+
+.blueborder h4 {
+	font-size: 13px;
+	color: #353865;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}	
+	
+
+/*Gray Background Div for Images*/
+
+.graybackground{
+	width: auto;
+	height: auto;
+	padding: 0px;
+	color: #FFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background-color: #b2b2b2;
+	line-height: 0px;
+	text-align: center;
+}
+
+
+table {
+    border: 0 none;
+    border-spacing: 0;
+    width: 100%;
+	text-align: left;
+}
+
+table th {
+	background:transparent  url(../image/opacity.png); 
+    color: #FFFFFF;
+    font-family: Arial,Helvetica,sans-serif;
+	text-transform:uppercase;
+	padding: 8px;
+	vertical-align: top;
+	border-bottom: 0px;
+}
+
+th a, th a:visited {
+    color: #00AEEA;
+    font-weight: bold;
+}
+
+th a:hover {
+    color: #fff;
+    font-weight: bold;
+}
+
+tbody, td {
+    border: 1px solid #D2D2D2; /*new adjustment*/
+    vertical-align: top;
+    padding: 5px 8px;
+}
+
+
+tr, tr.odd {
+     background-color: #ffffff;
+}
+
+tr.even {
+    background-color: #f1f1f2;
+}
+
+
+
+
+/*Custom styles for Base Design Add these to CKEditor*/
+.imgWide {
+	padding: 5px 0px 0px 0px
+}
+
+
+.statistic{
+	font-size: 17px;
+	line-height: 26px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #002776;
+	/*font-weight: bold;*/
+	}
+	
+* {
+    margin: 0;
+    padding: 0;
+}	

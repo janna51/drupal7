@@ -1,0 +1,18 @@
+name = MM Views
+description = Views integration for Monster Menus
+package = Monster Menus
+version = "7.x-1.0"
+core = 7.x
+dependencies[] = monster_menus (1.x)
+
+files[] = mm_views_handler_field_node_link_edit.inc
+files[] = mm_views_handler_field_node_link_revisions.inc
+files[] = mm_views_handler_field_recycled.inc
+files[] = mm_views_handler_field_sid.inc
+files[] = mm_views_handler_filter_recycled.inc
+; Information added by drupal.org packaging script on 2012-05-04
+version = "7.x-1.6"
+core = "7.x"
+project = "monster_menus"
+datestamp = "1336145157"
+

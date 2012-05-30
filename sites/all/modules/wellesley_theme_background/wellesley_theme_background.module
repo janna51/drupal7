@@ -1,0 +1,79 @@
+<?php
+function wellesley_theme_background_form_mm_ui_content_edit_alter(&$form, &$form_state) {
+  $color_scheme = '';
+  $color_scheme = wellesley_theme_background_get_color_scheme(arg(1));
+  //if($form['values']['color_scheme']){
+  	//$color_scheme = $form['settings_appearance']['color_scheme'];
+  //}
+  //watchdog("Wellesley Theme Background",'Theme default color @test', array('@test'=>$form_state));
+  //$color_scheme1 = $form_state['values']['color_scheme'];
+  //$color_scheme1 = $form_state['complete form']['color_scheme']['und'][0]['value']['#value'];
+  //watchdog("Wellesley Theme Background",'Theme default color @test', array('@test'=>$color_scheme1));
+  $form['settings_appearance']['color_scheme'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Page Color Scheme'),
+    '#default_value' => isset($color_scheme) ? $color_scheme:'',
+    '#maxlength' => 6,
+    '#size' => 8,
+  );
+  
+  //watchdog("Wellesley Theme Background",'Theme default color @test', array('@test'=>$color_scheme));
+   //watchdog("Wellesley Theme Background",'Argument 1 @test', array('@test'=>arg(1)));
+ 
+  $form['#submit'][] = 'wellesley_theme_background_content_edit_submit';
+}
+ 
+function wellesley_theme_background_content_edit_submit($form_id, &$form_values) {
+  //validate color value
+  $color_scheme_temp = $form_values['values']['color_scheme'];
+  $color_scheme ='#'.$color_scheme_temp;
+ if($color_scheme_temp=='' || $color_scheme_temp== NULL){
+ //watchdog("Wellesley Theme Background",'Theme default color empty');
+ 	db_query("UPDATE {mm_tree} SET color_scheme = :s WHERE mmtid = :d",array('s'=>'', 'd'=>$form_values['values']['path']));
+ } else if(preg_match('/^#[a-f0-9]{6}$/i', $color_scheme)){    
+  	db_query("UPDATE {mm_tree} SET color_scheme = :s WHERE mmtid = :d",array('s'=>$form_values['values']['color_scheme'], 'd'=>$form_values['values']['path']));
+  }else{   
+   $message = t('The Page Color Scheme %color_scheme value is invalid. Please re-enter your color scheme.', array('%color_scheme'=>$color_scheme));
+   form_set_error('color_scheme',$message);
+  }
+}
+ 
+function wellesley_theme_background_get_color_scheme($mmtid) {
+  $result = null;
+  $count = 0;
+  while(is_numeric($mmtid) && $result == null && $mmtid != "1") {
+  //watchdog("Wellesley Theme Background",'mmtid @test', array('@test'=>$mmtid));
+    $data = db_query("SELECT color_scheme, parent FROM {mm_tree} WHERE mmtid = :d", array('d'=>$mmtid));
+    $result=null;
+    $count1 = 0;
+
+    foreach ($data as $value){
+    		$result = $value->color_scheme;
+  	 		//watchdog("Wellesley Theme Background",'Theme color @test and @mmtid', array('@test'=>$result ,'@mmtid'=>$mmtid));
+  	 		$mmtid = $value->parent; 	 	
+			$count1++;
+   	}
+   	//watchdog("Wellesley Theme Background",'count1 @test', array('@test'=>$count1));
+   	if($count1<1){
+   		$mmtid = 1;
+   		$result = '';
+   	}
+   	//watchdog("Wellesley Theme Background",'count @test', array('@test'=>$count));	
+   	$count++;
+  }
+  
+  if ($result == null) {
+  	$result = '';
+  	//watchdog("Wellesley Theme Background",'Theme color @test haha @mmtid', array('@test'=>$result ,'@mmtid'=>$mmtid));
+  }
+  return $result;
+}
+ 
+/**
+ * Modify variables in the page template
+ */
+function wellesley_theme_background_preprocess(&$vars) {
+//watchdog("Wellesley Theme Background",'Argument 1 @test', array('@test'=>arg(1)));
+  $vars['color_scheme'] = wellesley_theme_background_get_color_scheme(arg(1));
+  
+}

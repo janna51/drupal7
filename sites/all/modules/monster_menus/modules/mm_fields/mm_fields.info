@@ -1,0 +1,13 @@
+name = MM Fields
+description = Field API integration for Monster Menus
+package = Monster Menus
+version = "7.x-1.0"
+core = 7.x
+dependencies[] = monster_menus (1.x)
+
+; Information added by drupal.org packaging script on 2012-05-04
+version = "7.x-1.6"
+core = "7.x"
+project = "monster_menus"
+datestamp = "1336145157"
+

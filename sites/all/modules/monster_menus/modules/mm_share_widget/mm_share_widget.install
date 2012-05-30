@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for the mm_share_widget.
+ */
+
+/**
+ * Implementation of hook_schema().
+ */
+function mm_share_widget_schema() {
+  $schema['mm_share_widget'] = array(
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'disp-width' => '10',
+      ),
+      'vid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'disp-width' => '10',
+      ),
+      'share_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'disp-width' => '10',
+      ),
+    ),
+    'primary key' => array('nid', 'vid', 'share_id'),
+    'foreign keys' => array(
+      'node' => array(
+        'table' => 'node',
+        'columns' => array(
+          'nid' => 'nid',
+          'vid' => 'vid',
+        ),
+      ),
+      'share' => array(
+        'table' => 'share',
+        'columns' => array(
+          'share_id' => 'share_id',
+        ),
+      ),
+    ),
+  );
+  $schema['mm_share_log'] = array(
+    'fields' => array(
+      'logid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'share_type' => array(
+        'type' => 'varchar',
+        'length' => '50',
+        'not null' => TRUE,
+      ),
+      'share_url' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'disp-width' => '11'
+      ),
+      'ctime' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'disp-width' => '11'
+      ),
+    ),
+    'primary key' => array('logid'),
+    'foreign keys' => array(
+      'users' => array(
+        'table' => 'users',
+        'columns' => array(
+          'uid' => 'uid',
+        ),
+      ),
+    ),
+    'indexes' => array(
+      'share_type' => array('share_type'),
+      'ctime' => array('ctime'),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implementation of hook_mm_verify_integrity()
+ */
+function mm_share_widget_mm_verify_integrity() {
+  return array('MM Share Widget' => array(
+    t('mm_share_widget.nid refers to missing node.nid') =>
+      "{mm_share_widget} x LEFT JOIN {node} n ON n.nid=x.nid WHERE n.nid IS NULL",
+    t('mm_share_widget.vid refers to missing node_revision.vid') =>
+      "{mm_share_widget} x LEFT JOIN {node_revision} n ON n.vid=x.vid WHERE n.vid IS NULL",
+
+    t('mm_share_widget.share_id refers to missing share.share_id') =>
+      "{mm_share_widget} x LEFT JOIN {share} s ON s.share_id=x.share_id WHERE s.share_id IS NULL",
+  ));
+}

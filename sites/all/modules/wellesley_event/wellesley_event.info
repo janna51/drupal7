@@ -1,0 +1,5 @@
+name = "Wellesley Event"
+description = "Module is used to synchronize event name, title, description and category for all the reservations for one event in R25. "
+core = 7.x
+package = "Development - WELLESLEY"
+version = 0.1

@@ -1,0 +1,46 @@
+ <?php
+
+/**
+ * Implementation of hook_install().
+ */
+
+function wellesley_theme_background_install() {
+  
+  $ret = array();
+  $new_schema['mm_tree'] = array();
+
+  wellesley_theme_background_schema_alter($new_schema);
+  foreach ($new_schema['mm_tree']['fields'] as $name => $spec) {
+    db_add_field('mm_tree', $name, $spec,$ret);
+  }
+}
+
+/**
+ * Implementation of hook_schema_alter(). We alter $schema by reference.
+ *
+ * @param $schema
+ *   The system-wide schema collected by drupal_get_schema().
+ */
+function wellesley_theme_background_schema_alter(&$schema) {
+  $schema['mm_tree']['fields']['color_scheme'] = array(
+    'type' => 'varchar',
+    'length' => '255',
+    'not null' => FALSE,
+    'default' => '',
+    'description' => t('The color scheme to use for this page'),
+  );
+}
+ 
+/**
+ * Implementation of hook_uninstall().
+ */
+function wellesley_theme_background_uninstall() {
+  $ret = array();
+  $new_schema['mm_tree'] = array();
+
+  wellesley_theme_background_schema_alter($new_schema);
+  foreach ($new_schema['mm_tree']['fields'] as $name => $spec) {
+     db_drop_field('mm_tree', $name, $spec,$ret);
+  }
+ 
+}

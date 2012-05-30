@@ -1,0 +1,215 @@
+<?php
+// $Id: migrate_example.module,v 1.1.2.4 2010/12/18 16:04:59 mikeryan Exp $
+
+define('WELLESLEY_MIGRATION_DATABASE_NAME',  'd6import');
+define('WELLESLEY_MIGRATION_FILES_DIRECTORY','/path/to/wellesley.org/sites/wellesley.org/files');
+
+/**
+ * You must implement hook_migrate_api(), setting the API level to 2, for
+ * your migration classes to be recognized by the Migrate module.
+ */
+function wellesley_migration_migrate_api() {
+  $api = array(
+    'api' => 2,
+  );
+  return $api;
+}
+
+
+
+// Add the common functions
+
+/**
+ * Retrieve the user associated with a node based on their username
+ */
+function wellesley_migration_retrieve_uid($username) {
+  // Get the correct username
+  $user_query = db_select('users', 'u')
+    ->fields('u', array('uid'))
+    ->condition('u.name', $username, '=');
+  $results = $user_query->execute();
+  foreach ($results as $row) {
+    return $row->uid;
+  }
+  return NULL;
+}
+
+/**
+ * Retrieve the set of terms associated with a node from the migration database.
+ */
+function wellesley_migration_retrieve_terms($nid) {
+  $terms_query = db_select(WELLESLEY_MIGRATION_DATABASE_NAME .'.term_node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.nid', $nid, '=');
+  $terms_query->join(WELLESLEY_MIGRATION_DATABASE_NAME .'.term_data', 'td', 'n.tid = td.tid');
+  $terms_query->addField('td', 'name');
+  $results = $terms_query->execute();
+  $terms = array();
+  foreach ($results as $result) {
+    $terms[] = $result->name;
+  }
+  return implode(',', $terms);
+}
+
+/**
+ * Retrieve the front page images associated with a node from the migration database.
+ */
+function wellesley_migration_retrieve_front_page_image($nid) {
+    // Right Side Images
+  $front_page_image_query = db_select(WELLESLEY_MIGRATION_DATABASE_NAME .'.content_field_frontpage_image', 'cffi')
+    ->fields('cffi')
+    ->condition('cffi.nid', $nid, '=');
+  $front_page_image_query->join(WELLESLEY_MIGRATION_DATABASE_NAME .'.files', 'f', 'cffi.field_frontpage_image_fid = f.fid');
+  $front_page_image_query->addField('f', 'filepath');
+  $results = $front_page_image_query->execute();
+
+  $images = array();
+
+  foreach ($results as $row) {
+    $current_image_data = array(
+      'path' => WELLESLEY_MIGRATION_FILES_DIRECTORY .'/'. $row->filepath,
+      'alt' => '',
+      'title' => '',
+    );
+    $images[] = drupal_json_encode($current_image_data);
+  }
+  return $images;
+}
+
+/**
+ * Retrieve the right side images associated with a node from the migration database.
+ */
+function wellesley_migration_retrieve_right_side_images($nid) {
+    // Right Side Images
+  $right_side_image_query = db_select(WELLESLEY_MIGRATION_DATABASE_NAME .'.content_field_right_side_image', 'rsi')
+    ->fields('rsi')
+    ->condition('rsi.nid', $nid, '=');
+  $right_side_image_query->join(WELLESLEY_MIGRATION_DATABASE_NAME .'.files', 'f', 'rsi.field_right_side_image_fid = f.fid');
+  $right_side_image_query->addField('f', 'filepath');
+  $results = $right_side_image_query->execute();
+
+  $images = array();
+
+  foreach ($results as $row) {
+    $image_data = unserialize($row->field_right_side_image_data);
+    $current_image_data = array(
+      'path' => WELLESLEY_MIGRATION_FILES_DIRECTORY .'/'. $row->filepath,
+      'alt' => $image_data['alt'],
+      'title' => $image_data['title'],
+    );
+    $images[] = drupal_json_encode($current_image_data);
+  }
+  return $images;
+}
+
+/**
+ * Retrieve the linked files associated with a node from the migration database.
+ */
+function wellesley_migration_retrieve_linked_files($nid) {
+  $linked_files_query = db_select(WELLESLEY_MIGRATION_DATABASE_NAME .'.content_field_linked_file', 'cflf')
+    ->fields('cflf')
+    ->condition('cflf.nid', $nid, '=');
+  $linked_files_query->join(WELLESLEY_MIGRATION_DATABASE_NAME .'.files', 'f', 'cflf.field_linked_file_fid = f.fid');
+  $linked_files_query->addField('f', 'filepath');
+  $results = $linked_files_query->execute();
+  
+  $files = array();
+  
+  foreach ($results as $row) {
+    $current_file_data = array(
+      'path' => WELLESLEY_MIGRATION_FILES_DIRECTORY .'/'. $row->filepath,
+      'alt' => '',
+      'title' => '',
+    );
+    $files[] = drupal_json_encode($current_file_data);
+  }
+  return $files;
+}
+
+/**
+ * Retrieve the the date range for a particular node from the migration database.
+ */
+function wellesley_migration_retrieve_date_range($nid) {
+  $event_date_range_query = db_select(WELLESLEY_MIGRATION_DATABASE_NAME .'.content_field_event_date', 'cfed')
+    ->fields('cfed')
+    ->condition('cfed.vid', $nid, '=');
+    
+  $results = $event_date_range_query->execute();
+  foreach ($results as $row) {
+    // This is to account for the lack of a timezone associated with the item.
+    return str_replace('T00', 'T09', $row->field_event_date_value .'|'. $row->field_event_date_value2 .'|');
+  }
+  return '';
+}
+
+/**
+ * Retrieve the the date range for a particular node from the migration database.
+ */
+function wellesley_migration_retrieve_date_times($nid) {
+  $event_date_query = db_select(WELLESLEY_MIGRATION_DATABASE_NAME .'.content_field_date_time', 'cfdt')
+    ->fields('cfdt')
+    ->condition('cfdt.vid', $nid, '=')
+    ->orderBy('cfdt.delta', 'ASC');
+    
+  $results = $event_date_query->execute();
+  $dates = array();
+  foreach ($results as $row) {
+    $dates[] = $row->field_date_time_value .'|'. $row->field_date_time_value2 .'|';
+  }
+  return implode('##', $dates);
+}
+
+
+// Define a way to migrate the date field.
+class RedcatMigrateDateFieldHandler extends MigrateFieldHandler {
+  public function __construct() {
+    $this->registerTypes(array('date', 'datestamp', 'datetime'));
+  }
+  
+  static function arguments($start_date = NULL, $end_date = NULL, $rrule = NULL, $separator = NULL) {
+    $arguments = array(
+      'start_date' => $start_date,
+      'end_date' => $end_date,
+      'rrule' => $rrule,
+      'separator' => $separator,
+      'timezone' => variable_get('date_default_timezone', @date_default_timezone_get()),
+      'date_type' => 'date',
+    );
+    return $arguments;
+  }
+  
+  public function prepare($entity, array $field_info, array $instance, array $values) {
+    if (isset($values['arguments'])) {
+      $arguments = $values['arguments'];
+      unset($values['arguments']);
+    }
+    $date_type = $field_info['type'];
+    $timezone = $field_info['settings']['tz_handling'];
+    $timezone_db = $field_info['settings']['timezone_db'];
+    $migration = Migration::currentMigration();
+    $destination = $migration->getDestination();
+    $language = isset($arguments['language']) ? $arguments['language'] : $destination->getLanguage();
+    $separator = FALSE;
+    if (!empty($arguments['separator'])) {
+      $separator = TRUE;
+    }
+
+    $return = array();
+    foreach ($values as $value) {
+      if ($separator) {
+        $date_values = explode($arguments['separator'], $value);
+      }
+      else {
+        //@TODO Figure out base behavior in this scenario.
+      }
+      $return[$language][] = array(
+        'value' => (isset($arguments['start_date']) && isset($date_values[$arguments['start_date']])) ? $date_values[$arguments['start_date']] : '',
+        'value2' => (isset($arguments['end_date']) && isset($date_values[$arguments['end_date']])) ? $date_values[$arguments['end_date']] : '',
+        'rrule' => (isset($arguments['rrule']) && isset($date_values[$arguments['rrule']])) ? $date_values[$arguments['rrule']] : '',
+        'timezone' => $timezone,
+        'timezone_db' => $timezone_db,
+      );
+    }
+    return $return;
+  }
+}

@@ -1,0 +1,16 @@
+name = MM Share widget
+description = Integrates Monster Menus with Share Widget
+core = 7.x
+version = "7.x-1.0"
+dependencies[] = share (2.x)
+dependencies[] = share_widget (2.x)
+dependencies[] = monster_menus (1.x)
+package = Monster Menus
+
+files[] = mm_share_widget.class.inc
+; Information added by drupal.org packaging script on 2012-05-04
+version = "7.x-1.6"
+core = "7.x"
+project = "monster_menus"
+datestamp = "1336145157"
+

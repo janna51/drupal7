@@ -1,0 +1,14 @@
+name = MM Workflow Access
+description = Provides access control for workflow states based on Monster Menus groups.
+package = Monster Menus
+; dependencies[] = workflow TODO: No D7 version. Must figure out upgrade path.
+dependencies[] = monster_menus (1.x)
+core = 7.x
+version = "7.x-1.0"
+
+; Information added by drupal.org packaging script on 2012-05-04
+version = "7.x-1.6"
+core = "7.x"
+project = "monster_menus"
+datestamp = "1336145157"
+

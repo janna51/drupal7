@@ -1,0 +1,52 @@
+@charset "UTF-8";
+
+#banner {
+    height: 40px;
+    padding-top: 26px;
+}
+
+#banner a.logo {
+    background: url("http://new.wellesley.edu/sites/all/themes/WellesleyStandard/image/wc_sprites_ie.png") no-repeat scroll -120px 0px transparent;
+    display: block;
+    height: 30px;
+    width: 280px;
+    float: left;
+    margin-left: 260px;
+    margin-top: 0;
+}
+
+
+#banner a.mywellesley {
+    background: url("http://new.wellesley.edu/sites/all/themes/WellesleyStandard/image/wc_sprites_ie.png") no-repeat scroll 0px 0px transparent;
+    display: block;
+    height: 27px;
+    width: 110px;
+    float: left;
+    margin-left: -23px;
+    margin-top: 0;
+}
+
+
+li.nav-search-wrap .nav-search-field {
+    width: 200px;
+}
+
+#global-navs {
+	width:865px;
+	height: 40px;
+	position: relative;
+	z-index:20;
+}
+
+/*erase*/
+#full_width_section {
+    z-index:1;
+}
+
+#content{
+	z-index:1;
+	}
+	
+img {
+    z-index:1;
+}

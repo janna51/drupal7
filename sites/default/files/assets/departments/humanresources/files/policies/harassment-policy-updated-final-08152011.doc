@@ -1,0 +1,312 @@
+{\rtf1\adeflang1025\ansi\ansicpg1252\uc1\adeff0\deff0\stshfdbch0\stshfloch0\stshfhich0\stshfbi0\deflang1033\deflangfe1033{\fonttbl{\f0\froman\fcharset0\fprq2{\*\panose 02020603050405020304}Times New Roman;}{\f39\fswiss\fcharset0\fprq2{\*\panose 00000000000000000000}Calibri;}
+{\f40\froman\fcharset0\fprq2{\*\panose 00000000000000000000}Georgia;}{\f41\froman\fcharset238\fprq2 Times New Roman CE;}{\f42\froman\fcharset204\fprq2 Times New Roman Cyr;}{\f44\froman\fcharset161\fprq2 Times New Roman Greek;}
+{\f45\froman\fcharset162\fprq2 Times New Roman Tur;}{\f46\fbidi \froman\fcharset177\fprq2 Times New Roman (Hebrew);}{\f47\fbidi \froman\fcharset178\fprq2 Times New Roman (Arabic);}{\f48\froman\fcharset186\fprq2 Times New Roman Baltic;}
+{\f49\froman\fcharset163\fprq2 Times New Roman (Vietnamese);}{\f431\fswiss\fcharset238\fprq2 Calibri CE;}{\f432\fswiss\fcharset204\fprq2 Calibri Cyr;}{\f434\fswiss\fcharset161\fprq2 Calibri Greek;}{\f435\fswiss\fcharset162\fprq2 Calibri Tur;}
+{\f438\fswiss\fcharset186\fprq2 Calibri Baltic;}{\f441\froman\fcharset238\fprq2 Georgia CE;}{\f442\froman\fcharset204\fprq2 Georgia Cyr;}{\f444\froman\fcharset161\fprq2 Georgia Greek;}{\f445\froman\fcharset162\fprq2 Georgia Tur;}
+{\f448\froman\fcharset186\fprq2 Georgia Baltic;}}{\colortbl;\red0\green0\blue0;\red0\green0\blue255;\red0\green255\blue255;\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;
+\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{
+\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \rtlch\fcs1 \af0\afs24\alang1025 \ltrch\fcs0 \fs24\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 \snext0 \styrsid1325224 Normal;}{\*\cs10 \additive \ssemihidden 
+Default Paragraph Font;}{\*\ts11\tsrowd\trftsWidthB3\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblind0\tblindtype3\tscellwidthfts0\tsvertalt\tsbrdrt\tsbrdrl\tsbrdrb\tsbrdrr\tsbrdrdgl\tsbrdrdgr\tsbrdrh\tsbrdrv 
+\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \rtlch\fcs1 \af0\afs20 \ltrch\fcs0 \fs20\lang1024\langfe1024\cgrid\langnp1024\langfenp1024 \snext11 \ssemihidden Normal Table;}{
+\s15\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \rtlch\fcs1 \af0\afs20\alang1025 \ltrch\fcs0 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 \sbasedon0 \snext15 \slink16 \ssemihidden \styrsid1325224 
+footnote text;}{\*\cs16 \additive \rtlch\fcs1 \af0\alang1025 \ltrch\fcs0 \lang1033\langfe1033\langnp1033\langfenp1033 \sbasedon10 \slink15 \slocked \ssemihidden \styrsid1325224 Footnote Text Char;}{\*\cs17 \additive \rtlch\fcs1 \af0 \ltrch\fcs0 \super 
+\sbasedon10 \ssemihidden \styrsid1325224 footnote reference;}}
+{\*\latentstyles\lsdstimax156\lsdlockeddef0{\lsdlockedexcept Normal;heading 1;heading 2;heading 3;heading 4;heading 5;heading 6;heading 7;heading 8;heading 9;toc 1;toc 2;toc 3;toc 4;toc 5;toc 6;toc 7;toc 8;toc 9;caption;Title;Default Paragraph Font;Subtitle;Strong;Emphasis;Table Grid;}}
+{\*\listtable{\list\listtemplateid1645389170\listhybrid{\listlevel\levelnfc3\levelnfcn3\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext\leveltemplateid235335942\'02\'00.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 
+\fbias0\hres0\chhres0 \fi-720\li1080\jclisttab\tx1080\lin1080 }{\listlevel\levelnfc4\levelnfcn4\leveljc0\leveljcn0\levelfollow0\levelstartat1\lvltentative\levelspace0\levelindent0{\leveltext\leveltemplateid1639433\'02\'01.;}{\levelnumbers\'01;}
+\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-360\li1440\jclisttab\tx1440\lin1440 }{\listlevel\levelnfc2\levelnfcn2\leveljc2\leveljcn2\levelfollow0\levelstartat1\lvltentative\levelspace0\levelindent0{\leveltext\leveltemplateid1770505
+\'02\'02.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-180\li2160\jclisttab\tx2160\lin2160 }{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\lvltentative\levelspace0\levelindent0{\leveltext
+\leveltemplateid984073\'02\'03.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-360\li2880\jclisttab\tx2880\lin2880 }{\listlevel\levelnfc4\levelnfcn4\leveljc0\leveljcn0\levelfollow0\levelstartat1\lvltentative\levelspace0\levelindent0
+{\leveltext\leveltemplateid1639433\'02\'04.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-360\li3600\jclisttab\tx3600\lin3600 }{\listlevel\levelnfc2\levelnfcn2\leveljc2\leveljcn2\levelfollow0\levelstartat1\lvltentative\levelspace0
+\levelindent0{\leveltext\leveltemplateid1770505\'02\'05.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-180\li4320\jclisttab\tx4320\lin4320 }{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\lvltentative
+\levelspace0\levelindent0{\leveltext\leveltemplateid984073\'02\'06.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-360\li5040\jclisttab\tx5040\lin5040 }{\listlevel\levelnfc4\levelnfcn4\leveljc0\leveljcn0\levelfollow0\levelstartat1
+\lvltentative\levelspace0\levelindent0{\leveltext\leveltemplateid1639433\'02\'07.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-360\li5760\jclisttab\tx5760\lin5760 }{\listlevel\levelnfc2\levelnfcn2\leveljc2\leveljcn2\levelfollow0
+\levelstartat1\lvltentative\levelspace0\levelindent0{\leveltext\leveltemplateid1770505\'02\'08.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-180\li6480\jclisttab\tx6480\lin6480 }{\listname ;}\listid259408978}}{\*\listoverridetable
+{\listoverride\listid259408978\listoverridecount0\ls1}}{\*\rsidtbl \rsid350619\rsid997776\rsid1188891\rsid1325224\rsid2057691\rsid2975437\rsid4603157\rsid5134776\rsid8324146\rsid8543181\rsid9201551\rsid10231002\rsid10577702\rsid10636440\rsid10647947
+\rsid10835419\rsid11867572\rsid13712465\rsid13905788\rsid15095248\rsid15280124\rsid15350761\rsid15422470\rsid16395880\rsid16662521}{\*\generator Microsoft Word 11.0.8134;}{\info{\title Updated for January 2011}{\author kstewart}{\operator COMICCIO}
+{\creatim\yr2011\mo9\dy8\hr15\min41}{\revtim\yr2011\mo9\dy8\hr15\min41}{\printim\yr2011\mo9\dy7\hr13\min44}{\version2}{\edmins0}{\nofpages8}{\nofwords2915}{\nofchars16621}{\*\company Wellesley College}{\nofcharsws19498}{\vern24611}{\*\password 00000000}}
+{\*\xmlnstbl {\xmlns1 http://schemas.microsoft.com/office/word/2003/wordml}{\xmlns2 urn:schemas-microsoft-com:office:smarttags}}\paperw12240\paperh15840\margl1800\margr1800\margt1440\margb1440\gutter0\ltrsect 
+\widowctrl\ftnbj\aenddoc\donotembedsysfont1\donotembedlingdata0\grfdocevents0\validatexml1\showplaceholdtext0\ignoremixedcontent0\saveinvalidxml0\showxmlerrors1\noxlattoyen\expshrtn\noultrlspc\dntblnsbdb\nospaceforul\formshade\horzdoc\dgmargin\dghspace180
+\dgvspace180\dghorigin1800\dgvorigin1440\dghshow1\dgvshow1
+\jexpand\viewkind1\viewscale100\pgbrdrhead\pgbrdrfoot\splytwnine\ftnlytwnine\htmautsp\nolnhtadjtbl\useltbaln\alntblind\lytcalctblwd\lyttblrtgr\lnbrkrule\nobrkwrptbl\snaptogridincell\allowfieldendsel\wrppunct
+\asianbrkrule\rsidroot1325224\newtblstyruls\nogrowautofit \fet0{\*\wgrffmtfilter 013f}\ilfomacatclnup0{\*\ftnsep \ltrpar \pard\plain \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \rtlch\fcs1 
+\af0\afs24\alang1025 \ltrch\fcs0 \fs24\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 \chftnsep 
+\par }}{\*\ftnsepc \ltrpar \pard\plain \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \rtlch\fcs1 \af0\afs24\alang1025 \ltrch\fcs0 \fs24\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid13712465 \chftnsepc 
+\par }}{\*\aftnsep \ltrpar \pard\plain \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \rtlch\fcs1 \af0\afs24\alang1025 \ltrch\fcs0 \fs24\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid13712465 \chftnsep 
+\par }}{\*\aftnsepc \ltrpar \pard\plain \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \rtlch\fcs1 \af0\afs24\alang1025 \ltrch\fcs0 \fs24\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid13712465 \chftnsepc 
+\par }}\ltrpar \sectd \ltrsect\linex0\endnhere\sectlinegrid360\sectdefaultcl\sectrsid997776\sftnbj {\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang {\pntxta .}}{\*\pnseclvl2\pnucltr\pnstart1\pnindent720\pnhang {\pntxta .}}{\*\pnseclvl3
+\pndec\pnstart1\pnindent720\pnhang {\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang {\pntxta )}}{\*\pnseclvl5\pndec\pnstart1\pnindent720\pnhang {\pntxtb (}{\pntxta )}}{\*\pnseclvl6\pnlcltr\pnstart1\pnindent720\pnhang {\pntxtb (}{\pntxta )}}
+{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang {\pntxtb (}{\pntxta )}}{\*\pnseclvl8\pnlcltr\pnstart1\pnindent720\pnhang {\pntxtb (}{\pntxta )}}{\*\pnseclvl9\pnlcrm\pnstart1\pnindent720\pnhang {\pntxtb (}{\pntxta )}}\ltrrow
+\trowd \irow0\irowband0\lastrow \ltrrow\ts11\trrh4427\trleft0\trftsWidth3\trwWidth9555\trftsWidthB3\trautofit1\trspdfl3\trspdft3\trspdfb3\trspdfr3\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid10835419\tblind0\tblindtype3 \clvmrg\clvertalc\clbrdrt
+\brdrtbl \clbrdrl\brdrtbl \clbrdrb\brdrtbl \clbrdrr\brdrtbl \cltxlrtb\clftsWidth1\clshdrawnil \cellx20\clvertalt\clbrdrt\brdrtbl \clbrdrl\brdrtbl \clbrdrb\brdrtbl \clbrdrr\brdrtbl \cltxlrtb\clftsWidth1\clshdrawnil \cellx9555\pard\plain \ltrpar
+\ql \li0\ri0\widctlpar\intbl\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\pararsid10835419 \rtlch\fcs1 \af0\afs24\alang1025 \ltrch\fcs0 \fs24\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\rtlch\fcs1 \af0 \ltrch\fcs0 
+\insrsid13712465\charrsid10647947 \cell }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 Updated for September 2011
+\par 
+\par 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 {\*\xmlopen\xmlns2{\factoidname City}}{\*\xmlopen\xmlns2{\factoidname place}}WELLESLEY{\*\xmlclose}{\*\xmlclose} COLLEGE}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465  }{\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid13712465\charrsid10647947 POLICY AGAINST SEXUAL HARASSMENT}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465  AND OTHER }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 UNLAWFUL DISCRIMINATION}{\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid13712465 , HARASSMENT, AND RETALIATION
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par It is the policy of the College to maintain a work and academic environment that is free of sexual harassment and discriminatory actions based on race, color, gender, age, sexual orientation, religion, ethnic or national origin}{\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid13712465\charrsid10636440 , physical or mental disability, genetic information,  veterans\rquote  status, membership in uniformed services,}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465  }{\rtlch\fcs1 \af0 \ltrch\fcs0 
+\insrsid13712465\charrsid10647947 or any other protected status. Unlawful employment discrimination and sexual hara
+ssment by officers, managers, faculty, supervisors, employees, students, advisors, vendors, clientele, and contractors will not be tolerated.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Further, any retaliation against an individual who has complained about sexual harassment or unlawful discriminat
+ion, or retaliation against individuals for cooperating with an investigation of a complaint of sexual harassment or unlawful discrimination, is similarly unlawful and will not be tolerated. }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par 
+\par The College will investigate complaints of violation of this policy.  }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 Persons who violate this policy will be subject to disciplinary action up to and including termination of employment, }{
+\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 suspension, and/or }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 expulsion}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 .   
+\par 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par I. DEFINITION OF UNLAWFUL DISCRIMINATION AND SEXUAL HARASSMENT}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par A. UNLAWFUL DISCRIMINATION
+\par Unlawful discrimination is strictly prohibited by the College and will not be tolerated. Treating an employee or student differently in the terms or conditions of his or her employment or education on the basis of the employee\rquote s or student\rquote 
+s race, color, gender, age, sexual orientation, religion, ethnic or national origin, }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 physical or mental }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 disability, }{\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid13712465 genetic information, }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 veterans\rquote  status,}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465  membership in uniformed services,}{\rtlch\fcs1 \af0 \ltrch\fcs0 
+\insrsid13712465\charrsid10647947  or any other protected status constitutes unlawful discrimination.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947  
+\par B. SEXUAL HARASSMENT
+\par Sexual harassment is a form of sex discrimination that is illegal under both federal and {\*\xmlopen\xmlns2{\factoidname State}}{\*\xmlopen\xmlns2{\factoidname place}}Massachusetts{\*\xmlclose}{\*\xmlclose}
+ state law and is strictly prohibited by the College. Unwelcome sexual advances, requests for sexual favors and other physical or verbal conduct of a sexual nature constitute sexual harassment when:}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Submission to such advances, requests or conduct is made either explicitly or implicitly a term or condition of an individual\rquote 
+s employment or academic advancement or participation in College programs or activities, or is used as a basis for employment or academic decisions affecting the individual; or
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 Rejection of such advances, requests or conduct affects a term or condition of an individual\rquote 
+s employment or academic advancement or participation in College programs or activities, or is used as a basis for employment or academic decisions affecting the individual; or}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Such conduct has the purpose or effect of unreasonably interfering with an individual\rquote 
+s work, academic performance, education, or participation in College programs or activities, or of creating an intimidating, hostile, work or academic environment.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par II. CONDUCT WHICH MAY CONSTITUTE UNLAWFUL SEXUAL HARASSMENT
+\par Sexual h
+arassment does not refer to words or actions of a welcome nature. It refers to behavior that is not welcome and occurs in a variety of situations which share a common element: the inappropriate introduction of sexual activities or comments into the work o
+r academic environment. Harassing conduct need not be motivated by sexual desire in order to constitute unlawful sexual harassment.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Sexual harassment often involves relationships of unequal power. Such situations may contain elements of coercion, such as w
+hen compliance with requests for sexual favors becomes a condition for granting privileges or favorable treatment on the job or in the classroom. However, sexual harassment may also involve relationships among persons of equal authority or power, such as 
+when repeated unwelcome advances or demeaning verbal comments by a co-worker towards another co-worker unreasonably interferes with a person\rquote 
+s ability to perform his or her work. Sexual harassment can also involve behavior directed to and/or by students of 
+the College, as well as employees and non-employees of the College, in short all members of the community may become harassers or victims of harassment.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Depending upon the circumstances and how they impact the workplace or academic environment, examples of sexual harassment include but are not limited to such conduct as the following:}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par verbal abuse, insults, jokes, comments or innuendo of a sexual nature that include lewd, obscene or sexually suggestive displays or remarks; }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par physical contact, such as touching, hugging, kissing, patting, or pinching, that is uninvited and unwanted by the other person;}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par the requests or demands for sexual favors accompanied by implicit or explicit promised rewards or threats concerning an individual\rquote s employment status or educational status;}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par repeated unwelcome social invitations, sexual flirtations, advances, propositions or unwanted requests for sexual favors;}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par threatened, attempted, or completed physical sexual assault;
+\par indecent exposure; }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par romantic involvement (even if consensual) between supervisors and subordinates that impacts the workplace and/or other individuals in areas such as assignments, advancements and benefits; or}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par romantic involvement (even if consensual) between supervisors and students they supervise that impacts the academic environment and/or other students in areas such as assignments, grades and academic benefits.}{\rtlch\fcs1 \af0 \ltrch\fcs0 
+\insrsid13712465 
+\par 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par III. CONDUCT WHICH MAY CONSTITUTE UNLAWFUL DISCRIMINATION}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Depending upon the circumstances and how they impact the workplace or academic environment, examples of unlawful discrimination could include the above-referenced examples concerning sexual harassment, as well as the following types of conduct:}{
+\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Making decisions about a person\rquote s employment, compensation or education based upon his or her race, color, gender, age, sexual orientation, religion, ethnic or national origin, }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465  physical or mental }{
+\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 disability, }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 genetic information, }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 veterans\rquote  status,}{\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid13712465  membership in uniformed services, }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947  or any other protected status; }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Verbal abuse, offensive innuendo or derogatory words, concerning a person\rquote s race, color, gender, age, sexual orientation, religion, ethnic or national origin, disability, veterans\rquote  status, or any other protected status;}{\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par An open display of objects or pictures designed to create a hostile working/learning environment based on a person\rquote s race, color, gender, age, sexual orientation, religion, ethnic or national origin, }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+physical or mental }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 disability, }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 genetic information, }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 veterans\rquote  status, 
+}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 membership in uniformed services, }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 or any other protected status.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par IV. EMPLOYEE, FACULTY AND STUDENT RESPONSIBILITIES
+\par Each employee, faculty member, administrator and student of the College is personally responsible for ensurin
+g that his or her conduct does not sexually harass or unlawfully discriminate against anyone in the workplace. Each employee, faculty member, administrator and student is responsible for cooperating in any investigation of alleged sexual harassment or unl
+awful discrimination if requested to do so by the person conducting the investigation.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Any person who observes an incident that may constitute sexual harassment or unlawful discrimination or who otherwise becomes aware of such an incident should immediately notify one of the investigator(s) listed below.}{\rtlch\fcs1 \af0 \ltrch\fcs0 
+\insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par V. EDUCATIONAL SETTING
+\par In the educational setting within the College, there exists latitude for a faculty member\rquote 
+s professional judgment in determining the appropriate content and presentation of academic material. Academic curriculum and pedagogical goals that serve legitimate and reasonable ed
+ucational purposes do not, in and of themselves, constitute sexual harassment or other unlawful discrimination. Those participating in the educational setting bear a responsibility to balance their professional academic responsibilities and academic freed
+oms with a consideration of the reasonable sensitivities of other participants. 
+\par Nothing contained in this policy shall be construed to limit the legitimate and reasonable academic responsibilities and academic freedoms of the College\rquote s professional educators.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par VI. PROCEDURES FOR A\ltrpar DDRESSING COMPLAINTS OF }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 VIOLATIONS OF THIS POLICY
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par When Wellesley College receives any complaint of harassment it will promptly investigate the allegation in a fair and expeditious manner. Wellesley College will make every effort t
+o proceed in such a way as to maintain confidentiality to the extent practicable under the circumstances. If it is determined that inappropriate conduct has occurred we will act promptly to eliminate the offending conduct, and where appropriate we will al
+so impose disciplinary action.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \b\insrsid13712465\charrsid10577702 Procedure
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+If an individual believes that s/he has been subjected to discrimination or sexual or other harassment prohibited by this policy, whether by a supervisor, a co-worker, faculty member, student, vendor, contractor or 
+any other person with whom s/he comes in contact at the College, the individual should report the incident promptly to his/her supervisor or Department Head, the Director of Human Resources at X2890, or to those listed in Section X of this policy. }{
+\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par If the particular circumstances make a discussion with or a complaint to an employee\rquote s own supervisor inappropriate (for example, the complaint involves the employee\rquote 
+s supervisor, or the employee fears retaliation by his/her supervisor), the employee shoul
+d bring the matter immediately to his/her Department Head, the Director of Human Resources at X2890, or to those listed in Section X of this policy. Any person who receives a complaint of sexual harassment or discrimination from an employee or student, or
+ who otherwise knows or has reason to believe that an employee or student has been subjected to sexual harassment or discrimination, is expected to report the incident promptly to the Director of Human Resources for investigation.}{\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par The following is an outline of the procedure generally followed once a complaint has been brought to the attention of the College:
+\par \bullet  A prompt and impartial investigation of the complaint is conducted by the College Investigators or by their designee. (}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 For example, for}{\rtlch\fcs1 \af0 \ltrch\fcs0 
+\insrsid13712465\charrsid10647947  a complaint}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465  against a student, }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 this would be the Dean of Students or her designee.)\~
+ This investigation will consist of (but will not necessarily be limited to) interviews of the individual who made the complaint, of the person or persons against whom the complaint wa
+s made and of other individuals who may have witnessed the reported incident or incidents.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par \bullet  Upon completion of the investigation, the person who conducted the investigation will meet individually with the individual who made the complaint and the individ
+ual or individuals against whom the complaint was made, to report the results of the investigation and, where a remedy is determined to be appropriate, to inform the parties of the steps that will be taken to remedy the situation. }{\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par VII. DISCIPLINARY ACTION
+\par In the event that the investigation reveals that sexual harassment, discrimination, or other inappropriate or unprofessional conduct (even if not unlawful) has occurred, further action will be taken, including disciplinary action, such as but not limited
+ to reprimand, change in work assignment, loss of privileges, mandatory training or suspension and/or immediate termination.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par VIII. CONFIDENTIALITY
+\par All actions taken to investigate and resolve complaints through this procedure shall be conducted with as mu
+ch privacy, discretion and confidentiality as possible without compromising the thoroughness and fairness of the investigation. All persons involved are to treat the situation with respect. To conduct a thorough investigation, the Investigator(s) may disc
+uss the complaint with witnesses and those persons involved in or affected by the complaint, and those persons necessary to assist in the investigation or to implement appropriate disciplinary actions. }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par IX. NO RETALIATION FOR FILING A COMPLAINT OF SEXUAL HARASSMENT OR UNLAWFUL DISCRIMINATION
+\par Retaliation against any individual for making a complaint of sexual harassment or of any unlawful discrimination or for assisting in the investigation of such a complaint is illegal and will not be tolerated. Any acts o
+f retaliation will be subject to appropriate disciplinary action, such as but not limited to reprimand, change in work assignment, loss of privileges, mandatory training or suspension and/or immediate termination.}{\rtlch\fcs1 \af0 \ltrch\fcs0 
+\insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par X. COLLEGE INVESTIGATORS OF COMPLAINTS OF SEXUAL HARASSMENT AND UNLAWFUL EMPLOYMENT DISCRIMINATION
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\intbl\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\pararsid15350761 {\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+The College has designated Kathryn Howe Stewart, Deputy Director of Human Resources, as the College\rquote s Title IX Coordinator. Additionally, the following investigators are designated as those persons who are charged with coordinating the College
+\rquote s implementation of this policy, and investigating complaints of sexual harassment and unlawful discrimination for the College.\~ They may be contacted to initiate an investigation under the policy or to answer 
+questions regarding this policy. The College also reserves the right to retain an outside investigator to investigate complaints regarding violations of this policy.
+\par 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\intbl\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\pararsid10835419 {\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 Eloise See McGaw, ext. 2890\line Room 136 Green Hall\line 
+Assistant Vice President and Director of Human Resources & Equal Opportunity}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Andrew Shennan, ext. 3583\line Room 349 Green Hall\line }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 Provost and Dean of the College}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947  }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Kathryn Howe Stewart, ext. 2214 \line Room 136 Green Hall\line Deputy Director of Human Resources}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Debra DeMeis, ext. 2323\line Room 344 Green Hall\line Dean of Students}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Michelle Lepore, ext. 2370\line Room 342 Green Hall\line Associate Dean of Students }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par Carolyn M. Slaboden, ext. 2216\line Room 136 Green Hall\line Associate Director of Human Resources & Equal Opportunity}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par STATE AND FEDERAL AGENCIES}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par In addition to the above, employees who believe that they may have been subjected to sexual harassment or unlawful discrimination, may file a formal complaint with either or both of the government agencies set forth below. Using the College\rquote 
+s complaint process does not prohibit an employee from filing a complaint with these agencies. 
+\par 1. The United States Equal Employment Opportunity Commission (\'93EEOC\'94)\line }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 John F. Kennedy Federal Building
+\par 475 Government Center }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 Boston, MA }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 02203
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 (617) 565 3200}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465  or (800) 669-4000
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par 2. Massachusetts Commission Against Discrimination (\'93MCAD\'94)\line Boston Office: }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465                                        }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+Springfield Office:\line One Ashburton Place}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465                              }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947  424 Dwight Street\line Boston, MA 02108 }{\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid13712465                                  }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 Springfield, MA 01103\line (617) 727-3990}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+                                        }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947  (413) 739-2145}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par 
+\par Worcester  Office:
+\par 455 Main Street
+\par Worcester, MA 01690
+\par (508) 799-8010
+\par 
+\par U.S. Department of Education
+\par Office of Civil Rights}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\intbl\wrapdefault\faauto\rin0\lin0\pararsid10835419 {\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 \~}{\rtlch\fcs1 \af0 \ltrch\fcs0 \cf1\insrsid13712465\charrsid5134776 5 Post Office Square, 8}{
+\rtlch\fcs1 \af0 \ltrch\fcs0 \cf1\super\insrsid13712465\charrsid5134776 th}{\rtlch\fcs1 \af0 \ltrch\fcs0 \cf1\insrsid13712465\charrsid5134776  Floor
+\par Boston, MA 02109-3921
+\par Telephone: (617) 289-0111
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\intbl\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\pararsid10835419 {\rtlch\fcs1 \af0 \ltrch\fcs0 \cf1\insrsid13712465\charrsid5134776 Facsimile: (617) 289-0150}{\rtlch\fcs1 \af0 \ltrch\fcs0 
+\insrsid13712465\charrsid5134776 
+\par \~}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \f40\cf1\insrsid13712465 
+\par }\pard \ltrpar\qc \li0\ri0\widctlpar\intbl\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\pararsid10835419 {\rtlch\fcs1 \af0 \ltrch\fcs0 \b\insrsid13712465 
+EXPECTATIONS OF PROFESSIONAL CONDUCT BETWEEN COLLEGE EMPLOYEES AND SUPERVISEES OR BETWEEN EMPLOYEES AND STUDENTS
+\par 
+\par 
+\par {\listtext\pard\plain\ltrpar \intbl\rtlch\fcs1 \af0 \ltrch\fcs0 \b\insrsid13712465\charrsid2975437 \hich\af0\dbch\af0\loch\f0 A.\tab}}\pard \ltrpar\ql \fi-720\li1080\ri0\widctlpar\intbl
+\jclisttab\tx1080\wrapdefault\aspalpha\aspnum\faauto\ls1\adjustright\rin0\lin1080\pararsid10835419 {\rtlch\fcs1 \af0 \ltrch\fcs0 \b\insrsid13712465\charrsid2975437 
+Unprofessional Conduct and Romantic Relationships between College Employees and Those They Supervise
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\intbl\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\pararsid10835419 {\rtlch\fcs1 \af0 \ltrch\fcs0 \b\insrsid13712465\charrsid2975437 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid2975437 
+The College prohibits all individuals it employs, whether faculty, staff or students, from directly or indirectly supervising other individuals at the College with whom they have a sexual, intimate, and/or romantic relationship, even if such relationships
+ are consensual.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \cs17\super\insrsid13712465\charrsid2975437 \chftn {\footnote \ltrpar \pard\plain \ltrpar\s15\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid1325224 \rtlch\fcs1 
+\af0\afs20\alang1025 \ltrch\fcs0 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\rtlch\fcs1 \af39 \ltrch\fcs0 \cs17\super\insrsid13712465 \chftn }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+ Of course, non-consensual relationships are strictly prohibited by the College and are also subject to legal prohibitions.}}}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid2975437 
+ Sexual, intimate, and/or romantic relationships, even if consensual, between College employees and those they supe
+rvise are potentially exploitive because of the imbalance of power inherent in them.  Such relationships raise concerns about the validity of consent, conflict of interest, fairness of treatment, and the creation of a hostile or intimidating work environm
+ent.  Further, they may give rise to liabilities for the College and/or the individuals involved in the relationships.
+\par 
+\par The term \'93directly or indirectly supervising\'94 includes, but is not limited to: (1) making or influencing hiring, promotion, salary, tenur
+e, or similar advancement and compensation or benefit decisions; (2) evaluating work performance, contributing to, or conducting, performance reviews; (3) making or participating in decisions about work assignments or schedules; and (4) participating in t
+he resolution of employee relations matters.  By way of example, a supervisor (faculty or staff) involved in a sexual, intimate and/or romantic relationship wi\ltrpar 
+th an employee under his or her supervision shall not write a job performance review, recommend a 
+salary increase, or become involved in any disciplinary or other employee relations matter involving the individual, or participate in re-appointment, assignment, tenure, promotion, compensation or merit increase decisions.  
+\par 
+\par Any employee who violates this policy will be subject to disciplinary action, up to and including termination of employment.
+\par 
+\par {\listtext\pard\plain\ltrpar \intbl\rtlch\fcs1 \af0 \ltrch\fcs0 \b\insrsid13712465\charrsid2975437 \hich\af0\dbch\af0\loch\f0 B.\tab}}\pard \ltrpar\ql \fi-720\li1080\ri0\widctlpar\intbl
+\jclisttab\tx1080\wrapdefault\aspalpha\aspnum\faauto\ls1\adjustright\rin0\lin1080\pararsid10835419 {\rtlch\fcs1 \af0 \ltrch\fcs0 \b\insrsid13712465\charrsid2975437 Unprofessional Conduct and Romantic Relationships between Students and College Employees
+
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\intbl\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\pararsid10835419 {\rtlch\fcs1 \af0 \ltrch\fcs0 \b\insrsid13712465\charrsid2975437 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid2975437 One of the foundations upon which Wellesley College\rquote s educational mis
+sion rests is the maintenance of a safe and intellectually stimulating environment where students may learn, think, work, and live without undue negative influences, concerns of favoritism, intimidation, and/or a hostile working or learning environment.
+
+\par 
+\par W
+hen a supervisory relationship exists between faculty or staff members and students, or such a supervisory relationship is likely in the future, a sexual, intimate, and/or romantic relationship, even if consensual, between those individuals is clearly det
+rimental to the educational process and to promoting an environment where favoritism and/or intimidation are absent.  Such a relationship is unconditionally unacceptable.
+\par 
+\par A \'93supervisory relationship\'94 is defined to include relations between a student and an
+y faculty, staff member or student who (1) now supervises or would have a reasonable or usual expectation of supervising the student in the future; (2) now provides or would have a reasonable or usual expectation of providing the student with oral or writ
+t
+en recommendations; (3) now grades and/or formally evaluates or would have a reasonable or usual expectation of grading and/or formally evaluating the student in future; and/or (4) now makes significant decisions, or would have a reasonable or usual expec
+tation of making significant decisions in future affecting the student\rquote s living space, financial aid, and/or access to essential College programs and services.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \cs17\super\insrsid13712465\charrsid2975437 \chftn 
+{\footnote \ltrpar \pard\plain \ltrpar\s15\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid1325224 \rtlch\fcs1 \af0\afs20\alang1025 \ltrch\fcs0 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {
+\rtlch\fcs1 \af39 \ltrch\fcs0 \cs17\super\insrsid13712465 \chftn }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465  Examples of supervisory relations between faculty and students would include, but not be limite
+d to: (a) individuals involved, or likely to be involved, in a classroom situation; (b) individuals involved, or likely to be involved, in a tutorial such as a 350, 360, 370, or other independent work; (c) any situation wherein a student is majoring in a 
+professor\rquote s department; (d) any situation wherein a student is a member of a group under the professor\rquote 
+s supervision, such as a junior year abroad program, or other group activities.  In addition, other kinds of academic supervisory roles come under this definition (e.g. class deans and students).
+\par 
+\par Examples of supervisory relations between staff and students would include, but not be limited to: (a) relations involving the heads of any division, and/or the managers of any department within the college; (b) r
+elations between students and student life staff, including Resident Directors, counseling and medical staff; (c) relations between members of the Wellesley College Campus Police and any student; (d) students working for and/or reporting to any staff memb
+er as part of their employment; (e) students and staff serving on College committees together; or (f) any formal or informal advising relationship between staff and students.}}}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid2975437 
+\par 
+\par Even when no supervisory relationship is present or anticipated, sexual, intimate, and/or romantic relationships, even if consensual, can be detrimental to the ideal of a collegial and supportive mentoring environment.}{\rtlch\fcs1 \af0 \ltrch\fcs0 
+\cs17\super\insrsid13712465\charrsid2975437 \chftn {\footnote \ltrpar \pard\plain \ltrpar\s15\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid1325224 \rtlch\fcs1 \af0\afs20\alang1025 \ltrch\fcs0 
+\fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\rtlch\fcs1 \af39 \ltrch\fcs0 \cs17\super\insrsid13712465 \chftn }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+ Non-consensual relationships are strictly prohibited by the College and are also subject to legal prohibitions.}}}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid2975437   T
+he College strongly discourages faculty and staff from engaging in any consensual sexual, intimate, and/or romantic relationships with any student.  Even if the relationship is consensual and the initiator of the relationship is a student, any ensuing adv
+e
+rse consequences arising from it will affect the employee whose institutional responsibility it is to deal in a professional manner with such situations.  In addition, because of the implicit or explicit power differential, if a student makes an allegatio
+n of sexual harassment, the affected faculty or staff member may have difficulty proving the relationship was fully consensual.  Relationships that begin on a consensual basis sometimes deteriorate into unwanted situations.
+\par 
+\par Any employee who violates this policy will be subject to disciplinary action, up to and including termination of employment.
+\par 
+\par 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \cf1\insrsid13712465\charrsid2975437 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par 
+\par \~}{\rtlch\fcs1 \af0\afs16 \ltrch\fcs0 \fs16\insrsid13712465\charrsid8543181 04/07/11\cell }\pard \ltrpar\ql \li0\ri0\widctlpar\intbl\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0 {\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\trowd \irow0\irowband0\lastrow \ltrrow\ts11\trrh4427\trleft0\trftsWidth3\trwWidth9555\trftsWidthB3\trautofit1\trspdfl3\trspdft3\trspdfb3\trspdfr3\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid10835419\tblind0\tblindtype3 \clvmrg\clvertalc\clbrdrt
+\brdrtbl \clbrdrl\brdrtbl \clbrdrb\brdrtbl \clbrdrr\brdrtbl \cltxlrtb\clftsWidth1\clshdrawnil \cellx20\clvertalt\clbrdrt\brdrtbl \clbrdrl\brdrtbl \clbrdrb\brdrtbl \clbrdrr\brdrtbl \cltxlrtb\clftsWidth1\clshdrawnil \cellx9555\row }\pard \ltrpar
+\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid1325224 {\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465\charrsid10647947 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 {\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13712465 
+\par }}

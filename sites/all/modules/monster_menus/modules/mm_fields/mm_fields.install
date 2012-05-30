@@ -1,0 +1,7 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function mm_fields_install() {
+}

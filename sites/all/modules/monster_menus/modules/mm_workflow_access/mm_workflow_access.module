@@ -1,0 +1,574 @@
+<?php
+
+/**
+ * @file
+ *   Provides node access permissions based on workflow states.
+ */
+
+function mm_workflow_access_theme() {
+  return array(
+    'mm_workflow_access_form' => array(
+      'render element' => 'form',
+    ),
+  );
+}
+
+function theme_mm_workflow_access_form($variables) {
+  $form = $variables['form'];
+  $rows = array();
+  foreach ($form as $sid => $modes) {
+    if (is_numeric($sid)) {
+      $row = array(array('data' => $modes['#title'], 'rowspan' => 2));
+      foreach (array(MM_PERMS_READ, MM_PERMS_WRITE) as $mode) {
+        $data = drupal_render($modes[$mode]);
+        $row[] = array('data' => $data, 'class' => array('align-top'));
+      }
+      $rows[] = array('data' => $row);
+      $rows[] = array('data' => array(array('&nbsp;'), drupal_render($modes['d'])));
+    }
+  }
+
+  $header = array(t('Workflow state'), t('Permission'), t('Permission'));
+  return theme('table', array('header' => $header, 'rows' => $rows)) . drupal_render($form['no_read']);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function mm_workflow_access_form_workflow_admin_ui_edit_form_alter(&$form, $form_state) {
+  $form['basic']['instructions'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Help text'),
+    '#default_value' => variable_get('mm_workflow_access_instructions' . $form['wid']['#value'], ''),
+    '#rows' => 4,
+    '#description' => t('Instructions to the user editing a node, describing what to do with the workflow field')
+  );
+  $desc = array(
+    MM_PERMS_READ => t('Who can read posts in this state'),
+    MM_PERMS_WRITE => t('Who can edit/read posts in this state'),
+    'd' => t('Who can delete posts in this state'));
+  $form['workflow_access'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Access control'),
+    '#collapsible' => TRUE,
+    '#tree' => TRUE,
+    '#theme' => 'mm_workflow_access_form',
+  );
+
+  $perms = array();
+  $select = db_select('mm_workflow_access', 'a');
+  $select->join('workflow_states', 's', 's.sid = a.sid');
+  $select->leftJoin('mm_tree', 't', 't.mmtid = a.gid');
+  $result = $select->condition('s.wid', $form['wid']['#value'])
+    ->fields('a')
+    ->fields('t', array('name'))
+    ->execute();
+  foreach ($result as $row) {
+    if ($row->gid == 0) $perms[$row->sid][$row->mode]['everyone'] = TRUE;
+    elseif ($row->gid < 0) $perms[$row->sid][$row->mode]['author'] = TRUE;
+    else $perms[$row->sid][$row->mode]['groups'][$row->gid] = mm_content_expand_name($row->name);
+  }
+
+  $states = workflow_get_workflow_states_by_wid($form['wid']['#value']);
+  foreach ($states as $state) {
+    if (!$state->sysid) {
+      $sid = $state->sid;
+      $form['workflow_access'][$sid]['#title'] = $state->state;
+      foreach (array(MM_PERMS_READ, MM_PERMS_WRITE, 'd') as $mode) {
+        $form['workflow_access'][$sid][$mode]['desc'] = array(
+          '#type' => 'item',
+          '#title' => $desc[$mode],
+          '#weight' => 0
+        );
+        $form['workflow_access'][$sid][$mode]['everyone'] = array(
+          '#type' => 'checkbox',
+          '#default_value' => isset($perms[$sid][$mode]['everyone']) ? $perms[$sid][$mode]['everyone'] : FALSE,
+          '#name' => "workflow_access[$sid][$mode][everyone]",
+          '#attributes' => array('class' => array('wfe-everyone')),
+          '#title' => t('everyone'),
+          '#weight' => 1
+        );
+        $form['workflow_access'][$sid][$mode]['author'] = array(
+          '#type' => 'checkbox',
+          '#default_value' => isset($perms[$sid][$mode]['author']) ? $perms[$sid][$mode]['author'] : FALSE,
+          '#title' => t('the author'),
+          '#attributes' => array('class' => array('wfe-author')),
+          '#name' => "workflow_access[$sid][$mode][author]",
+          '#weight' => 2
+        );
+        $form['workflow_access'][$sid][$mode]['groups'] = array(
+          '#type' => 'mm_grouplist',
+          '#mm_list_popup_start' => mm_content_groups_mmtid(),
+          '#mm_list_other_name' => "workflow_access[$sid][$mode][everyone]",
+          '#default_value' => isset($perms[$sid][$mode]['groups']) ? $perms[$sid][$mode]['groups'] : array(),
+          '#name' => "workflow_access[$sid][$mode][groups]",
+          '#weight' => 3
+        );
+      }
+    }
+  }
+
+  drupal_add_js(<<<EOJ
+(function (\$) {
+Drupal.behaviors.MMworkflowAccessEditForm = {
+  attach: function(context, settings) {
+    \$('input.wfe-everyone:not(.wfe-everyone-processed)', context)
+      .addClass('wfe-everyone-processed')
+      .click(function() {
+        if (this.checked) {
+          var p = this.parentNode.parentNode.parentNode;
+          \$('input.wfe-author', p).removeAttr('checked');
+          \$('input:hidden', p)[0].delAll();
+        }
+      });
+    \$('input.wfe-author:not(.wfe-author-processed)', context)
+      .addClass('wfe-author-processed')
+      .click(function() {
+        if (this.checked) {
+          \$('input.wfe-everyone', this.parentNode.parentNode.parentNode)
+            .removeAttr('checked');
+        }
+      });
+  }
+};
+})(jQuery);
+EOJ
+  , array('type' => 'inline', 'scope' => 'footer'));
+
+  $form['workflow_access']['no_read'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Message to users who aren\'t permitted to read the content'),
+    '#default_value' => variable_get('mm_workflow_access_no_read' . $form['wid']['#value'], ''),
+    '#rows' => 4,
+  );
+
+  // Place our block comfortably down the page.
+  $form['submit']['#weight'] = 10;
+  $form['permissions']['#weight'] = 11;
+  $form['#submit'][] = 'mm_workflow_access_form_submit';
+}
+
+/**
+ * Implements hook_workflow().
+ *
+ * Update permissions when a node changes workflow state.
+ */
+function mm_workflow_access_workflow($op, $old_sid, $sid, $node) {
+  switch ($op) {
+    case 'transition post':
+      if ($old_sid != $sid) {
+        // $node is a reference by the time it gets here, so to avoid changing
+        // the data for other parts of the code, clone it.
+        $copy = clone($node);
+        unset($copy->mm_skip_perms);
+        _mm_workflow_access_set_node_perms($copy, $sid);
+        mm_content_set_node_perms($copy);
+        _mm_workflow_access_set_author($copy);
+      }
+      break;
+
+    case 'state delete':
+      db_delete('mm_workflow_access')
+        ->condition('sid', $old_sid)
+        ->execute();
+      break;
+
+    case 'workflow delete':
+      // $old_sid, here, is really the workflow ID (wid)
+      variable_del('mm_workflow_access_instructions' . $old_sid);
+      variable_del('mm_workflow_access_no_read' . $old_sid);
+      break;
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function mm_workflow_access_form_node_form_alter(&$form, $form_state, $form_id) {
+  global $user;
+
+  $node = $form['#node'];
+  if (($wid = _mm_workflow_access_node_has_workflow($node)) !== FALSE) {
+    $name = check_plain(workflow_get_name($wid));
+    if (isset($form['workflow'][$name])) {
+      $form['workflow'][$name]['#description'] = variable_get('mm_workflow_access_instructions' . $wid, '');
+    }
+    $form['settings_perms']['help1'] = array(
+      '#weight' => -2,
+      '#type' => 'item',
+      '#description' => t('This content\'s permissions are controlled by a workflow.')
+    );
+    $form['settings_perms']['#description'] = NULL;
+    $form['settings_perms']['#title'] = t('Who can edit this content');
+    mm_ui_perms_readonly($form['settings_perms'], MM_PERMS_WRITE);
+    if (isset($form['nid']['#value'])) {
+      if (!empty($form['settings_perms']['others_w']['#default_value'])) {
+        $help2 = t('Everyone can edit this content while it is in the current workflow state.');
+        unset($form['settings_perms']['users_w']);
+        unset($form['settings_perms']['groups_w']);
+      }
+      else {
+        $help2 = t('These users and groups can edit this content while it is at the current stage of the workflow:');
+        if ($node->workflow_author == $node->uid) {
+          $form['settings_perms']['users_w']['#title'] = t('The author:');
+          $form['settings_perms']['users_w']['#default_value'] = array($node->workflow_author => mm_ui_uid2name($node->workflow_author));
+        }
+        else {
+          if (!isset($form['settings_perms']['groups_w']['#default_value']) || !count($form['settings_perms']['groups_w']['#default_value'])) {
+            unset($form['settings_perms']['groups_w']);
+            $help2 = t('Only administrators can edit this content while it is at the current stage of the workflow.');
+          }
+          unset($form['settings_perms']['users_w']);
+        }
+      }
+    }
+    else {
+      unset($form['settings_perms']['users_w']);
+      unset($form['settings_perms']['groups_w']);
+    }
+    unset($form['settings_perms']['others_w']);
+    $form['settings_perms']['help2'] = array(
+      '#weight' => '-1',
+      '#type' => 'item',
+      '#description' => $help2
+    );
+    // Prevent MM from setting any permissions while saving $node
+    $form['settings_perms']['mm_skip_perms'] = array(
+      '#type' => 'value',
+      '#value' => TRUE
+    );
+    $uid = isset($form['nid']['#value']) ? $node->workflow_author : $user->uid;
+    if (isset($form['settings_perms']['owner'])) {
+      $form['workflow']['workflow_author-choose'] = $form['settings_perms']['owner-choose'];
+      $form['workflow']['workflow_author-choose']['#title'] = 'Choose the author';
+      $form['workflow']['workflow_author'] = $form['settings_perms']['owner'];
+      $form['workflow']['workflow_author']['#title'] = 'Author:';
+      $form['workflow']['workflow_author']['#description'] = t('In addition to appearing in the attribution, the content\'s author can be given special permissions within a workflow.');
+      $form['workflow']['workflow_author']['#mm_list_autocomplete_name'] = 'workflow_author-choose';
+      $form['workflow']['workflow_author']['#default_value'] = array($uid => mm_ui_uid2name($uid));
+      $form['settings_perms']['owner'] = array(
+        '#type' => 'value',
+        '#value' => array(1 => 'admin'),
+      );
+      unset($form['settings_perms']['owner-choose']);
+    }
+    else {
+      $form['workflow']['workflow_author'] = array(
+        '#type' => 'value',
+        '#value' => array($uid => ''),
+      );
+    }
+  }
+}
+
+/**
+ * Store permission settings for workflow states.
+ */
+function mm_workflow_access_form_submit($form, $form_state) {
+  variable_set('mm_workflow_access_instructions' . $form_state['values']['wid'], $form_state['values']['instructions']);
+  variable_set('mm_workflow_access_no_read' . $form_state['values']['wid'], $form_state['values']['workflow_access']['no_read']);
+
+  foreach ($form_state['values']['workflow_access'] as $sid => $access) {
+    // Ignore irrelevant keys.
+    if (!is_numeric($sid)) {
+      continue;
+    }
+
+    $groups_w = array();
+    $everyone = $author = FALSE;
+    db_delete('mm_workflow_access')
+      ->condition('sid', $sid)
+      ->execute();
+
+    foreach ($access as $mode => $perms) {
+      if ($perms['everyone'] != 0) {
+        db_insert('mm_workflow_access')
+          ->fields(array('sid' => $sid, 'mode' => $mode, 'gid' => 0))
+          ->execute();
+        if ($mode == MM_PERMS_WRITE) $everyone = TRUE;
+      }
+      else {
+        if ($perms['author'] != 0) {
+          db_insert('mm_workflow_access')
+            ->fields(array('sid' => $sid, 'mode' => $mode, 'gid' => -1))
+            ->execute();
+          if ($mode == MM_PERMS_WRITE) $author = TRUE;
+        }
+        foreach (array_keys($perms['groups']) as $gid)
+          db_insert('mm_workflow_access')
+            ->fields(array('sid' => $sid, 'mode' => $mode, 'gid' => $gid))
+            ->execute();
+        if ($mode == MM_PERMS_WRITE) $groups_w = $perms['groups'];
+      }
+    }
+
+    // Update all nodes having same workflow state to reflect new settings.
+    $select = db_select('node', 'n');
+    $select->leftJoin('workflow_node', 'wn', 'wn.nid = n.nid');
+    $result = $select->condition('wn.sid', $sid)
+      ->fields('n', array('nid'))
+      ->execute();
+    foreach ($result as $node) {
+      $node->users_w = NULL;
+      $node->groups_w = $groups_w;
+      $node->others_w = $everyone;
+      $node->mm_others_w_force = TRUE;
+      mm_content_set_node_perms($node);
+      if ($author) {
+        _mm_workflow_access_get_author($node);
+        $node->uid = $node->workflow_author;
+        _mm_workflow_access_set_author($node);
+      }
+    }
+  }
+  drupal_set_message(t('Workflow access permissions updated.'));
+}
+
+/**
+ * Implements hook_mm_delete().
+ */
+function mm_workflow_access_mm_delete($mmtids) {
+  db_delete('mm_workflow_access')
+    ->condition('gid', $mmtids, 'IN')
+    ->execute();
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function mm_workflow_access_user_delete(&$account) {
+  db_delete('mm_workflow_author')
+    ->condition('uid', $account->uid)
+    ->execute();
+}
+
+/**
+ * Implements hook_nodeapi().
+ */
+function mm_workflow_access_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  switch ($op) {
+    case 'load':
+      if (_mm_workflow_access_node_has_workflow($node) !== FALSE) {
+        _mm_workflow_access_get_author($node);
+        $account = user_load($node->workflow_author);
+        $node->workflow_author_name = $account->name;
+      }
+      break;
+
+    case 'presave':
+      if (isset($node->workflow_author) && is_array($node->workflow_author)) {
+        // Convert workflow_author back to a single number
+        $node->workflow_author = mm_ui_mmlist_key0($node->workflow_author);
+      }
+      break;
+
+    case 'update':
+    case 'insert':
+      if (isset($node->workflow_author)) {
+        db_merge('mm_workflow_author')
+          ->keys(array('nid' => $node->nid))
+          ->fields(array('uid' => $node->workflow_author))
+          ->execute();
+      }
+      break;
+
+    case 'delete':
+      db_delete('mm_workflow_author')
+        ->condition('nid', $node->nid)
+        ->execute();
+      break;
+
+    case 'view':
+      // Prevent the user from seeing content based on their ability to read at
+      // this stage of the workflow
+      if (($wid = _mm_workflow_access_node_has_workflow($node)) !== FALSE && !_mm_workflow_access_get_user_perm($node, MM_PERMS_READ)) {
+        $node->content = array('body' => array('#markup' => variable_get('mm_workflow_access_no_read' . $wid, '')));
+        $node->mm_workflow_access_read_denied = TRUE;
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_link_alter().
+ */
+function mm_workflow_access_link_alter(&$links, $node) {
+  if (!empty($node->mm_workflow_access_read_denied)) unset($links['comment_add']);
+}
+
+/**
+ * Implements hook_mm_node_access().
+ */
+function mm_workflow_access_mm_node_access($op, $node, $account) {
+  if ($node->nid && _mm_workflow_access_node_has_workflow($node)) {
+    if ($op == 'view') $mode = MM_PERMS_READ;
+    elseif ($op == 'update') $mode = MM_PERMS_WRITE;
+    elseif ($op == 'delete') $mode = 'd';
+    else return;
+
+    if (!isset($node->_workflow)) $node->_workflow = workflow_node_current_state($node);
+    return _mm_workflow_access_get_user_perm($node, $mode, $account);
+  }
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function mm_workflow_access_menu_alter(&$callbacks) {
+  if (isset($callbacks['mm/%mm_mmtid/node/%node/workflow'])) {
+    $callbacks['mm/%mm_mmtid/node/%node/workflow']['access callback'] = '_mm_workflow_access_tab_access';
+  }
+}
+
+/**
+ * Implements hook_preprocess_username().
+ */
+function mm_workflow_access_preprocess_username(&$variables) {
+  $account = $variables['account'];
+  // May be set in mm_workflow_access_node_load()
+  if (isset($account->workflow_author_name)) {
+    $variables['name'] = $account->workflow_author_name;
+    $variables['uid'] = $account->workflow_author;
+    $variables['account'] = user_load($variables['uid']);
+    $variables['link_attributes'] = array();
+    // Populate link path and attributes if appropriate.
+    if ($variables['uid'] && $variables['profile_access']) {
+      // We are linking to a local user.
+      $variables['link_attributes'] = array('title' => t('View user profile.'));
+      $variables['link_path'] = 'user/' . $variables['uid'];
+    }
+    elseif (!empty($account->homepage)) {
+      // Like the 'class' attribute, the 'rel' attribute can hold a
+      // space-separated set of values, so initialize it as an array to make it
+      // easier for other preprocess functions to append to it.
+      $variables['link_attributes'] = array('rel' => array('nofollow'));
+      $variables['link_path'] = $account->homepage;
+      $variables['homepage'] = $account->homepage;
+    }
+  }
+}
+
+/**
+ * Menu access control callback. Determine access to Workflow tab.
+ */
+function _mm_workflow_access_tab_access($node = NULL) {
+  global $user;
+
+  if (user_access('bypass node access')) return TRUE;
+
+  $roles = array_keys($user->roles);
+  if ($node->workflow_author == $user->uid) {
+    $roles = array_merge(array('author'), $roles);
+  }
+
+  $map = workflow_get_workflow_type_map_by_type($node->type);
+  if (is_array($map)) {
+    foreach ($map as $obj) {
+      $workflow = workflow_get_workflows_by_wid($obj->wid);
+      if ($workflow && !empty($workflow->tab_roles)) {
+        if (array_intersect($roles, explode(',', $workflow->tab_roles))) {if (function_exists('debug_add_dump')) debug_add_dump(1);
+          return TRUE;
+        }
+      }
+    }
+  }
+
+  return FALSE;
+}
+
+function _mm_workflow_access_set_author($node) {
+  db_update('node')
+    ->fields(array('uid' => $node->uid))
+    ->condition('nid', $node->nid)
+    ->execute();
+}
+
+function _mm_workflow_access_node_has_workflow($node) {
+  // Return TRUE only if the workflow form is to be displayed and a workflow
+  // is assigned to this node type
+  if (in_array('node', variable_get('workflow_' . $node->type, array('node')))) {
+    $map = workflow_get_workflow_type_map_by_type($node->type);
+    if (is_array($map)) {
+      foreach ($map as $obj) {
+        if (workflow_get_states($obj->wid)) return $obj->wid;
+      }
+    }
+  }
+  return FALSE;
+}
+
+function _mm_workflow_access_get_perms($node, $account = NULL) {
+  global $user;
+  $cache = &drupal_static(__FUNCTION__);
+
+  if (!isset($node->_workflow)) return array();
+  if (!isset($account)) $account = $user;
+  if (user_access('administer all menus', $account)) return array(MM_PERMS_READ, MM_PERMS_WRITE, 'd');
+
+  if (!isset($cache[$account->uid][$node->_workflow][$node->workflow_author])) {
+    $cache[$account->uid][$node->_workflow][$node->workflow_author] = array();
+    # gid = 0: everyone; gid = -1: author
+    $select = db_select('mm_workflow_access', 'a');
+    $select->leftJoin('mm_group', 'g', 'a.gid > 0 AND g.gid = a.gid');
+    $select->leftJoin('mm_virtual_group', 'v', 'v.vgid = g.vgid');
+    $select->fields('a', array('gid', 'mode'));
+    $select->condition('a.sid', $node->_workflow)
+      ->condition(db_or()
+        ->condition('v.uid', $account->uid)
+        ->condition(db_and()
+          ->condition('g.vgid', 0)
+          ->condition('g.uid', $account->uid)
+        )
+        ->condition('a.gid', 0, '<=')
+      );
+    $result = $select->execute();
+    foreach ($result as $mode) {
+      if ($mode->gid >= 0 || $node->workflow_author == $account->uid)
+        $cache[$account->uid][$node->_workflow][$node->workflow_author][] = $mode->mode;
+    }
+
+    if (user_access('view all menus', $account))
+      $cache[$account->uid][$node->_workflow][$node->workflow_author][] = MM_PERMS_READ;
+  }
+  return $cache[$account->uid][$node->_workflow][$node->workflow_author];
+}
+
+function _mm_workflow_access_get_user_perm($node, $mode, $account = NULL) {
+  $list = _mm_workflow_access_get_perms($node, $account);
+  // write also includes read
+  if ($mode == MM_PERMS_READ && in_array(MM_PERMS_WRITE, $list)) return TRUE;
+  return in_array($mode, $list);
+}
+
+function _mm_workflow_access_set_node_perms(&$node, $sid) {
+  $node->users_w = $node->groups_w = array();
+  $node->others_w = FALSE;
+  $node->uid = 1;
+  $select = db_select('mm_workflow_access', 'a')
+    ->fields('a');
+  $select->leftJoin('mm_group', 'g', 'a.gid > 0 AND g.gid = a.gid');
+  $result = $select->condition('a.mode', MM_PERMS_WRITE)
+    ->condition('a.sid', $sid)
+    ->execute();
+  foreach ($result as $row) {
+    if ($row->gid == 0) {
+      // Setting others_w_force makes the change apply in MM, even though
+      // this user might not normally have permission
+      $node->others_w = $node->mm_others_w_force = TRUE;
+      break;
+    }
+    elseif ($row->gid > 0) $node->groups_w[$row->gid] = '';
+    elseif (isset($node->workflow_author)) {
+      $node->uid = $node->workflow_author;
+    }
+  }
+}
+
+function _mm_workflow_access_get_author(&$node) {
+  // Note: Was formerly cached using mm_query_result()
+  $node->workflow_author = db_select('mm_workflow_author', 'a')
+    ->fields('a', array('uid'))
+    ->condition('nid', $node->nid)
+    ->execute()->fetchField();
+  if (empty($node->workflow_author)) $node->workflow_author = 1;
+}

@@ -1,0 +1,17 @@
+name = MM Schedule
+description = Provides themes for the display of schedules and calendars
+package = Monster Menus
+version = "7.x-1.0"
+core = 7.x
+dependencies[] = monster_menus (1.x)
+dependencies[] = views (3.x)
+dependencies[] = date (2.x)
+dependencies[] = calendar (2.x)
+
+files[] = mm_schedule_calendar_plugin_style_ical.inc
+; Information added by drupal.org packaging script on 2012-05-04
+version = "7.x-1.6"
+core = "7.x"
+project = "monster_menus"
+datestamp = "1336145157"
+

@@ -1,0 +1,19 @@
+name = "WELLESLEY MIGRATION"
+description = "Module to migrate WELLESLEY content to Drupal 7"
+package = "Development - WELLESLEY"
+core = 7.x
+dependencies[] = migrate
+dependencies[] = migrate_extras
+dependencies[] = field
+dependencies[] = file
+dependencies[] = image
+dependencies[] = number
+dependencies[] = text
+dependencies[] = options
+dependencies[] = taxonomy
+dependencies[] = date
+dependencies[] = link
+
+files[] = wellesley_migration.module
+files[] = wellesley_basic_page.inc
+

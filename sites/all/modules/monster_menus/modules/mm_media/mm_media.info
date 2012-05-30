@@ -1,0 +1,18 @@
+name = MM Media
+description = Allows uploading of media and inserting media into content.
+dependencies[] = bundle_copy
+dependencies[] = file_entity
+dependencies[] = image
+dependencies[] = media
+dependencies[] = monster_menus
+dependencies[] = wysiwyg
+package = Monster Menus
+version = "7.x-1.0"
+configure = admin/config/mm/mm_media
+core = 7.x
+; Information added by drupal.org packaging script on 2012-05-04
+version = "7.x-1.6"
+core = "7.x"
+project = "monster_menus"
+datestamp = "1336145157"
+
